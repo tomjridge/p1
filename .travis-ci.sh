@@ -30,7 +30,8 @@ eval `opam config env`
 make
 # make test
 # FIXME what does this do? makes opam use this particular version?
-opam pin p1 .
+# can only pin packages known to opam
+# opam pin p1 .
 
 # case $OCAML_VERSION in
 # 3.12.*) ;;
