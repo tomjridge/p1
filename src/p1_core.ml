@@ -143,8 +143,7 @@ let context_contains (LC(lc)) (nt,(l,h)) = (
 (* remember what NT is called on what input *)
 (* nonterm -> 'a ty_parser -> 'a ty_parser *)
 let update_lctxt nt p = (fun i0 ->
-  let (s,i,j) = dest_substring i0.sb1 in
-  p { i0 with lc1=(update_context i0.lc1 (nt,(i,j))) })
+  p { i0 with lc1=(update_context i0.lc1 (nt,lc_substring_of i0.sb1)) })
 
 let (_:nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = update_lctxt
 
