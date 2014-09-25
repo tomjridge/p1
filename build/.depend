@@ -1,12 +1,18 @@
-p1_core.cmo : p1_terminal_parsers.cmo
-p1_core.cmx : p1_terminal_parsers.cmx
-p1_everything.cmo : p1_core.cmo
-p1_everything.cmx : p1_core.cmx
+interactive.cmo :
+interactive.cmx :
+p1_core.cmo : p1_prelude.cmo
+p1_core.cmx : p1_prelude.cmx
+p1_everything.cmo : p1_util.cmo p1_prelude.cmo p1_core.cmo
+p1_everything.cmx : p1_util.cmx p1_prelude.cmx p1_core.cmx
 p1_lib.cmo : p1_terminal_parsers.cmo p1_everything.cmo p1_core.cmo
 p1_lib.cmx : p1_terminal_parsers.cmx p1_everything.cmx p1_core.cmx
 p1_main.cmo : p1_core.cmo
 p1_main.cmx : p1_core.cmx
+p1_prelude.cmo :
+p1_prelude.cmx :
 p1_terminal_parsers.cmo :
 p1_terminal_parsers.cmx :
-tr_simple_file.cmo :
-tr_simple_file.cmx :
+p1_util.cmo : p1_prelude.cmo p1_core.cmo
+p1_util.cmx : p1_prelude.cmx p1_core.cmx
+pending.cmo : p1_terminal_parsers.cmo p1_prelude.cmo
+pending.cmx : p1_terminal_parsers.cmx p1_prelude.cmx
