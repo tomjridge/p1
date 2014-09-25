@@ -1,14 +1,16 @@
 
 
-type substring = [ `SS of string * int * int ]
+type 'a substring = [ `SS of string * int * int ]
 
-let dest_substring : substring -> string * int * int = 
+let dest_substring : 'a substring -> string * int * int = 
   fun (`SS(s,i,j)) -> (s,i,j)
 
-let content : substring -> string = 
+(*
+let content : string substring -> string = 
   fun (`SS(s,l,h)) -> String.sub s l (h-l)
+*)
 
-let len : substring -> int = (
+let len : 'a substring -> int = (
   fun (`SS(s,i,j)) -> (j-i))
 
 
@@ -34,13 +36,13 @@ type grammar = parse_rule list
 
 
 
-type parse_tree = NODE of nonterm * parse_tree list | LF of term * substring
+type 'a parse_tree = NODE of nonterm * 'a parse_tree list | LF of term * 'a substring
 
 
 
 type lc_substring = int * int (* FIXME really need an extra arg int for the string *)
 
-let lc_substring_of : substring -> lc_substring =
+let lc_substring_of : 'a substring -> lc_substring =
   fun (`SS(s,i,j)) -> (i,j)
 
 type local_context = LC of (nonterm * lc_substring) list
@@ -49,14 +51,14 @@ let empty_context = LC []
 
 
 
-type ty_input1 = { lc1 : local_context; sb1 : substring }
+type 'a ty_input1 = { lc1 : local_context; sb1 : 'a substring }
 
 let toinput s = { lc1=empty_context; sb1=s }
-let (_:substring -> ty_input1) = toinput
+let (_:'a substring -> 'a ty_input1) = toinput
 
 
 
-type 'a ty_parser = ty_input1 -> ('a * substring) list
+type ('a,'b) ty_parser = 'a ty_input1 -> ('b * 'a substring) list
 
 
 
@@ -69,10 +71,10 @@ type 'a ty_parser = ty_input1 -> ('a * substring) list
 
 let ( >> ) p f = (fun i0 ->
   i0 |> p |> List.map (fun (e,s) -> (f e, s)))
-let (_:'a ty_parser -> ('a -> 'b) -> 'b ty_parser) = ( >> )
+let (_:('a,'b) ty_parser -> ('b -> 'c) -> ('a,'c) ty_parser) = ( >> )
 
 let ( ||| ) p1 p2 = fun s -> List.append (p1 s) (p2 s)
-let (_: 'a ty_parser -> 'a ty_parser -> 'a ty_parser) = ( ||| )
+let (_: ('a,'b) ty_parser -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = ( ||| )
 
 (* a version of the combinator that ignores duplicate entries FIXME *)
 let ( **> ) p1 p2 = (fun i ->
@@ -80,7 +82,7 @@ let ( **> ) p1 p2 = (fun i ->
     { lc1=i.lc1; sb1=s1 } |> p2 |> List.map (fun (e2,s2) -> ((e1,e2),s2))
   in
   i |> p1 |> List.map f |> List.concat)
-let (_:'a ty_parser -> 'b ty_parser -> ('a * 'b) ty_parser) = ( **> )
+let (_:('a,'b) ty_parser -> ('a,'c) ty_parser -> ('a, 'b*'c) ty_parser) = ( **> )
 
 
 
@@ -104,14 +106,14 @@ let rec or_list ps = match ps with
 
 let lift f i = {i with sb1=(f i.sb1) } 
 let dec_high i = lift (fun (`SS(s,i,j)) -> `SS(s,i,j-1)) i 
-let inc_high : ('a * substring) -> ('a * substring) = (
+let inc_high : ('a * 'b substring) -> ('a * 'b substring) = (
   fun (e,`SS(s,i,j)) -> (e,`SS(s,i,j+1)))
 
 let ignr_last p i = (
   match len i.sb1 with
   | 0 -> []
   | _ -> i |> dec_high |> p |> List.map inc_high)
-let (_:'a ty_parser -> 'a ty_parser) = ignr_last
+let (_:('a,'b) ty_parser -> ('a,'b) ty_parser) = ignr_last
 
 
 (**********************************************************************)
@@ -144,7 +146,7 @@ let update_lctxt nt p = (fun i0 ->
   let (s,i,j) = dest_substring i0.sb1 in
   p { i0 with lc1=(update_context i0.lc1 (nt,(i,j))) })
 
-let (_:nonterm -> 'a ty_parser -> 'a ty_parser) = update_lctxt
+let (_:nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = update_lctxt
 
 let check_and_upd_lctxt nt p = fun i0 ->
   let should_trim = context_contains i0.lc1 (nt,lc_substring_of i0.sb1) in
@@ -155,5 +157,5 @@ let check_and_upd_lctxt nt p = fun i0 ->
   else
     (update_lctxt nt p) i0
 
-let (_:nonterm -> 'a ty_parser -> 'a ty_parser) = check_and_upd_lctxt
+let (_:nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = check_and_upd_lctxt
 
