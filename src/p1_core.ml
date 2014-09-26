@@ -171,8 +171,9 @@ let (_:nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = check_and_upd_lctxt
 (**********************************************************************)
 (* memoization support *)
 
-(* FIXME really this needs to have an int identifier *)
-type hashkey = (nonterm * local_context * (int * int))
+(* FIXME really this needs to have an gensymed int identifier for the
+   string component *)
+type hashkey = (local_context * (int * int))
 
-let hashkey_of_input nt i0 = (nt,i0.lc1,lc_substring_of i0.sb1)
+let hashkey_of_input i0 = (i0.lc1,lc_substring_of i0.sb1)
   

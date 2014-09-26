@@ -36,10 +36,6 @@ let memo tbl key_of_input f i = (
     let _ = Hashtbl.add tbl k v in
     v)
 
-(* in the following example, we only have one nt, so we don't care
-   about the nonterminal part of the hashkey *)
-let hashkey_of_input = hashkey_of_input ""
-
 (* we want to create a new hashtable for each new string that we
    parse, hence unit argument *)
 let parse_E () =

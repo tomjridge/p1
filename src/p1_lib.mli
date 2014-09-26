@@ -57,7 +57,7 @@ val ignr_last : ('a,'b) ty_parser -> ('a,'b) ty_parser)
 val check_and_upd_lctxt : nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser
 
 type hashkey
-val hashkey_of_input: nonterm -> 'a ty_input -> hashkey
+val hashkey_of_input: 'a ty_input -> hashkey
 
 
 
