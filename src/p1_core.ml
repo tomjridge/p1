@@ -166,3 +166,13 @@ let check_and_upd_lctxt nt p = fun i0 ->
 
 let (_:nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = check_and_upd_lctxt
 
+
+
+(**********************************************************************)
+(* memoization support *)
+
+(* FIXME really this needs to have an int identifier *)
+type hashkey = (nonterm * local_context * (int * int))
+
+let hashkey_of_input nt i0 = (nt,i0.lc1,lc_substring_of i0.sb1)
+  
