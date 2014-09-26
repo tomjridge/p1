@@ -10,7 +10,7 @@
     See the file {p1_examples.ml} for examples.
 *)
 
-type 'a substring = [ `SS of string * int * int ]
+type 'a substring = [ `SS of 'a * int * int ]
 val mk_ss : string -> string substring
 (*
 val dest_substring : 'a substring -> string * int * int

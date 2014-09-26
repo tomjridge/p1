@@ -1,6 +1,6 @@
 
 
-type 'a substring = [ `SS of string * int * int ]
+type 'a substring = [ `SS of 'a * int * int ]
 let mk_ss : string -> string substring = fun s -> `SS(s,0,String.length s)
 
 let dest_substring : 'a substring -> string * int * int = 
