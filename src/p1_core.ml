@@ -51,14 +51,15 @@ let empty_context = LC []
 
 
 
-type 'a ty_input1 = { lc1 : local_context; sb1 : 'a substring }
+type 'a ty_input = { lc1 : local_context; sb1 : 'a substring }
+let substring_of_input i = i.sb1
 
 let toinput s = { lc1=empty_context; sb1=s }
-let (_:'a substring -> 'a ty_input1) = toinput
+let (_:'a substring -> 'a ty_input) = toinput
 
 
 
-type ('a,'b) ty_parser = 'a ty_input1 -> ('b * 'a substring) list
+type ('a,'b) ty_parser = 'a ty_input -> ('b * 'a substring) list
 
 
 
@@ -85,10 +86,12 @@ let ( **> ) p1 p2 = (fun i ->
 let (_:('a,'b) ty_parser -> ('a,'c) ty_parser -> ('a, 'b*'c) ty_parser) = ( **> )
 
 
-
+(*
 let always = fun i -> [([],i.sb1)]
+let (_:('a,'b)ty_parser) = always
 
 let never = fun i -> []
+let (_:('a,'b)ty_parser) = never
 
 
 
@@ -102,7 +105,7 @@ let then_list2 nt = fun ps -> then_list ps >> (fun xs -> NODE(nt,xs))
 let rec or_list ps = match ps with
 | [] -> never
 | p::ps -> (p ||| (or_list ps))
-
+*)
 
 let lift f i = {i with sb1=(f i.sb1) } 
 let dec_high i = lift (fun (`SS(s,i,j)) -> `SS(s,i,j-1)) i 

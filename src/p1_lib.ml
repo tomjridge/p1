@@ -1,23 +1,21 @@
-(**
+type 'a substring = 'a P1_core.substring
 
-Top-level name bindings for P1
+type nonterm = string
 
-*)
+type 'a ty_input = 'a P1_core.ty_input
 
-(* 
-Interactive use:
+let toinput = P1_core.toinput
+let substring_of_input = P1_core.substring_of_input
 
-    #use "topfind";;
-    #require "unix";;
-    #mod_use "p1_terminal_parsers.ml";;
-    #mod_use "p1_core.ml";;
-    #mod_use "p1_everything.ml";;
-    #mod_use "p1_lib.ml";;
+type ('a,'b) ty_parser = ('a,'b) P1_core.ty_parser
 
-*)
+let ( >> ) = P1_core.( >> )
+let ( ||| ) = P1_core.( ||| )
+let ( **> ) = P1_core.( **> )
 
-module P1_terminal_parsers = P1_terminal_parsers
+let check_and_upd_lctxt = P1_core.check_and_upd_lctxt
 
-module P1_core = P1_core
+let a = P1_parsers.a
+let until_a = P1_parsers.until_a
 
-module P1_everything = P1_everything
+
