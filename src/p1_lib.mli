@@ -1,3 +1,15 @@
+(** Simple combinator parsing library that can handle all context-free grammars.
+
+    This code is based on: Tom Ridge, Simple, functional, sound and
+    complete parsing for all context-free grammars. In Jean Pierre
+    Jouannaud and Zhong Shao, editors, Certified Programs and Proofs -
+    First International Conference, CPP 2011, Kenting, Taiwan,
+    December 7-9, 2011. Proceedings, volume 7086 of Lecture Notes in
+    Computer Science, pages 103--118. Springer, 2011
+
+    See the file {p1_examples.ml} for examples.
+*)
+
 type 'a substring = [ `SS of string * int * int ]
 val mk_ss : string -> string substring
 (*
