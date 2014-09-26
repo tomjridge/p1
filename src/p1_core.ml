@@ -1,6 +1,7 @@
 
 
 type 'a substring = [ `SS of string * int * int ]
+let mk_ss : string -> string substring = fun s -> `SS(s,0,String.length s)
 
 let dest_substring : 'a substring -> string * int * int = 
   fun (`SS(s,i,j)) -> (s,i,j)
@@ -70,11 +71,13 @@ type ('a,'b) ty_parser = 'a ty_input -> ('b * 'a substring) list
    depends on the notion of context. Context comes later, and is
    modularly combined with the following. *)
 
+let unique = P1_prelude.unique
+
 let ( >> ) p f = (fun i0 ->
-  i0 |> p |> List.map (fun (e,s) -> (f e, s)))
+  i0 |> p |> List.map (fun (e,s) -> (f e, s)) |> unique)
 let (_:('a,'b) ty_parser -> ('b -> 'c) -> ('a,'c) ty_parser) = ( >> )
 
-let ( ||| ) p1 p2 = fun s -> List.append (p1 s) (p2 s)
+let ( ||| ) p1 p2 = fun s -> List.append (p1 s) (p2 s) |> unique
 let (_: ('a,'b) ty_parser -> ('a,'b) ty_parser -> ('a,'b) ty_parser) = ( ||| )
 
 (* a version of the combinator that ignores duplicate entries FIXME *)

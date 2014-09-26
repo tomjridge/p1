@@ -12,16 +12,10 @@ COMPFLAGS=$(WARNINGS)
 P1=p1_prelude.cmo p1_core.cmo p1_parsers.cmo p1_util.cmo p1_lib.cmo # p1_everything.cmo p1_lib.cmo tr_simple_file.cmo
 CMO=$(P1) 
 
-NATIVES=# 
+NATIVES=p1_examples.native # 
 
-all: p1_lib.cmo #p1.cma p1.cmxa
+all: p1.cma p1.cmxa $(NATIVES) #p1.cma p1.cmxa
 
-# p3_$(VERSION).cmo: p3.cma
-# 	$(CAMLC) $(CAMLCINCLUDES) -pack -o $@ $(CMO)
-
-# we have to compile with make clean; FORPACK="-for-pack P3_x_x" make p3_x_x.cmx ; then make clean and recompile as normal
-p3_$(VERSION).cmx: $(CMO:.cmo=.cmx)
-	$(CAMLOPT) $(CAMLOPTINCLUDES) -pack -o $@ $(CMO:.cmo=.cmx)
 
 p1.cma: $(CMO)
 	$(CAMLC) $(CAMLCINCLUDES) -a -o $@ $(CMO)
@@ -29,8 +23,8 @@ p1.cma: $(CMO)
 p1.cmxa: $(CMO:.cmo=.cmx)
 	$(CAMLOPT) -a -o $@ $(CMO:.cmo=.cmx)
 
-$(NATIVES): %.native: %.ml p3.cmxa
-	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ p3.cmxa $<
+$(NATIVES): %.native: %.ml p1.cmxa
+	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ p1.cmxa $<
 
 
 # Default rules
@@ -62,4 +56,4 @@ clean:
 	rm -f *.{html,css}
 
 realclean:
-	rm -f p3_$(VERSION).{o,cmi,cmo,cmx}
+

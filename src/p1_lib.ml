@@ -1,4 +1,5 @@
 type 'a substring = 'a P1_core.substring
+let mk_ss = P1_core.mk_ss
 
 type nonterm = string
 

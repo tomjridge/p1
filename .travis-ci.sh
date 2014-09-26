@@ -28,6 +28,7 @@ opam install ${OPAM_DEPENDS}
 
 eval `opam config env`
 make
+build/p1_examples.native
 # make test
 # FIXME what does this do? makes opam use this particular version?
 # can only pin packages known to opam

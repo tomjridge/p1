@@ -1,4 +1,5 @@
 type 'a substring = [ `SS of string * int * int ]
+val mk_ss : string -> string substring
 (*
 val dest_substring : 'a substring -> string * int * int
 val len : 'a substring -> int
