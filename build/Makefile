@@ -9,7 +9,7 @@ OCAMLDOC=$(shell command -v ocamldoc.opt || command -v ocamldoc || echo missing_
 WARNINGS=-w -8 #-w -26-8
 COMPFLAGS=$(WARNINGS)
 
-P1=p1_prelude.cmo p1_core.cmo p1_parsers.cmo p1_lib.cmo # p1_everything.cmo p1_lib.cmo tr_simple_file.cmo
+P1=p1_prelude.cmo p1_core.cmo p1_parsers.cmo p1_util.cmo p1_lib.cmo # p1_everything.cmo p1_lib.cmo tr_simple_file.cmo
 CMO=$(P1) 
 
 NATIVES=# 

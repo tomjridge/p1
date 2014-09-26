@@ -46,3 +46,7 @@ val check_and_upd_lctxt : nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser
 
 val a : string -> (string, string substring) ty_parser
 val until_a : string -> (string, string substring) ty_parser
+
+
+val read_file_as_string: string -> string option
+val write_string_to_file: string -> string -> bool

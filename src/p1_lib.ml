@@ -19,3 +19,6 @@ let a = P1_parsers.a
 let until_a = P1_parsers.until_a
 
 
+let read_file_as_string = P1_util.read_file_as_string
+let write_string_to_file = P1_util.write_string_to_file
+
