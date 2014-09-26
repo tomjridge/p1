@@ -15,9 +15,11 @@ let len : 'a substring -> int = (
   fun (`SS(s,i,j)) -> (j-i))
 
 
-type term = string
 
 type nonterm = string
+
+(*
+type term = string
 
 type symbol = [ `NT of nonterm | `TM of term ]
 
@@ -38,7 +40,7 @@ type grammar = parse_rule list
 
 
 type 'a parse_tree = NODE of nonterm * 'a parse_tree list | LF of term * 'a substring
-
+*)
 
 
 type lc_substring = int * int (* FIXME really need an extra arg int for the string *)
