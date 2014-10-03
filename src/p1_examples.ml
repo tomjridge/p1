@@ -14,6 +14,19 @@ let set_equal xs ys = (
   let subset xs ys = List.for_all (fun x -> List.mem x ys) xs in
   subset xs ys && subset ys xs)
 
+(* a simple terminal parser *)
+
+let a1 : (string,int) ty_parser = (fun i0 ->
+    let `SS(s,i,j) = substring_of_input i0 in
+    if i < j && s.[i] = '1' then 
+      [(1,`SS(s,i+1,j))]
+    else
+      [])
+
+
+(**********************************************************************)
+(* example grammar: E -> E E E | "1" | eps *)
+
 let rec parse_E = (fun i -> 
   check_and_upd_lctxt "E" (
     ((parse_E **> parse_E **> parse_E) >> (fun (x,(y,z)) -> x+y+z))
