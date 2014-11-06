@@ -1,4 +1,4 @@
-type 'a substring = [ `SS of string * int * int ]
+type 'a substring = [ `SS of 'a * int * int ]
 (*
 val dest_substring : 'a substring -> string * int * int
 val len : 'a substring -> int

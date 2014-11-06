@@ -9,13 +9,20 @@ OCAMLDOC=$(shell command -v ocamldoc.opt || command -v ocamldoc || echo missing_
 WARNINGS=-w -8 #-w -26-8
 COMPFLAGS=$(WARNINGS)
 
-P1=p1_prelude.cmo p1_core.cmo p1_parsers.cmo p1_util.cmo p1_lib.cmo # p1_everything.cmo p1_lib.cmo tr_simple_file.cmo
-CMO=$(P1) 
+MLS:=$(shell $(CAMLDEP) -sort *.ml)
+MLS:=$(filter-out p1_examples.ml interactive.ml, $(MLS)) # p1_examples.ml is an executable
+CMO=$(MLS:.ml=.cmo) 
 
-NATIVES=p1_examples.native # 
+NATIVES=p1_examples.native
 
-all: p1.cma p1.cmxa $(NATIVES) #p1.cma p1.cmxa
+all: 
+	make before_all
+	make $(CMO) p1.cma p1.cmxa p1_examples.native
 
+before_all: link depend
+
+link: 
+	find ../src \( -name "*.ml" -or -name "*.mli" \) -maxdepth 1 -exec ln -sf \{\} . \;
 
 p1.cma: $(CMO)
 	$(CAMLC) $(CAMLCINCLUDES) -a -o $@ $(CMO)
@@ -45,15 +52,13 @@ doc: p1_lib.mli
 
 
 depend:
-	$(CAMLDEP) $(INCLUDES) *.mli *.ml >.depend
+	$(CAMLDEP) *.mli *.ml >.depend
 
-include .depend
+-include .depend
 
 
 clean:
-	rm -f $(CMO) $(CMO:.cmo=.cmi) $(CMO:.cmo=.cmx) $(NATIVES:.native=.cmo) $(NATIVES:.native=.cmi) $(NATIVES:.native=.cmx) {minip3,mini_p3_lib}.cm[iox]
-	rm -f *.cma *.cmxa *.a $(CMO:.cmo=.o) *.native $(NATIVES:.native=.o) {minip3,mini_p3_lib}.o
-	rm -f *.{html,css}
+	find . ! \( -name Makefile -or -name . -or -name interactive.ml -or -name old \) -exec rm -f \{\} \;
 
 realclean:
 
