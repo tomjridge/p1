@@ -1,3 +1,5 @@
+(** Parse a concrete representation of a grammar with actions *)
+
 open P1_lib
 
 type nonterm = string
@@ -5,6 +7,8 @@ type symbol = [ `NT of string | `TM of string ]
 
 type grammar = (nonterm * symbol list) list
 
+(** The first component is the header; the second is a list of rules,
+    with actions *)
 type grammar_with_actions = 
   string (* header *)
   * (nonterm * symbol list * string) list (* rule with action *)
