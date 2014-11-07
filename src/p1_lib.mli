@@ -12,6 +12,11 @@
 
 type 'a substring = [ `SS of 'a * int * int ]
 val mk_ss : string -> string substring
+
+val content : string substring -> string
+
+val ss_len : 'a substring -> int
+
 (*
 val dest_substring : 'a substring -> string * int * int
 val len : 'a substring -> int
@@ -65,6 +70,18 @@ val hashkey_of_input: 'a ty_input -> hashkey
 val a : string -> (string, string substring) ty_parser
 val until_a : string -> (string, string substring) ty_parser
 
+(** Take a regexp (following Str) and parse that regexp at beginning
+    of input *)
+val parse_RE : string -> (string, string substring) ty_parser
+
+(** Take a regexp, and parse until that regexp occurs in the input. If
+    the regexp does not occur, consume all the input. *)
+val parse_not_RE : string -> (string, string substring) ty_parser
+
+val parse_EOF : (string, string substring) ty_parser
+
+(** Parse an empty substring *)
+val parse_eps : ('a,'a substring) ty_parser
 
 val read_file_as_string: string -> string option
 val write_string_to_file: string -> string -> bool

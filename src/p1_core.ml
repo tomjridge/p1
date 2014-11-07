@@ -1,15 +1,14 @@
 
 
 type 'a substring = [ `SS of 'a * int * int ]
+
 let mk_ss : string -> string substring = fun s -> `SS(s,0,String.length s)
 
 let dest_substring : 'a substring -> string * int * int = 
   fun (`SS(s,i,j)) -> (s,i,j)
 
-(*
 let content : string substring -> string = 
   fun (`SS(s,l,h)) -> String.sub s l (h-l)
-*)
 
 let len : 'a substring -> int = (
   fun (`SS(s,i,j)) -> (j-i))
