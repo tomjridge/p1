@@ -11,11 +11,13 @@ CAMLOPTINCLUDES=str.cmxa
 WARNINGS=-w -8 #-w -26-8
 COMPFLAGS=$(WARNINGS)
 
-MLS:=$(shell $(CAMLDEP) -sort *.ml)
-MLS:=$(filter-out p1_examples.ml interactive.ml, $(MLS)) # p1_examples.ml is an executable
-CMO=$(MLS:.ml=.cmo) 
+IGNORE_FOR_LIB:=p1_examples.ml interactive.ml # don't want these in the lib
 
-NATIVES=p1_examples.native
+MLS_FOR_LIB:=$(shell $(CAMLDEP) -sort *.ml)
+MLS_FOR_LIB:=$(filter-out $(IGNORE_FOR_LIB), $(MLS_FOR_LIB)) # p1_examples.ml is an executable
+CMO=$(MLS_FOR_LIB:.ml=.cmo)
+
+EXECS=p1_examples.ml # executables
 
 all: 
 	make before_all
@@ -32,7 +34,7 @@ p1.cma: $(CMO)
 p1.cmxa: $(CMO:.cmo=.cmx)
 	$(CAMLOPT) $(COMPFLAGS) -a -o $@ $(CMO:.cmo=.cmx)
 
-$(NATIVES): %.native: %.ml p1.cmxa
+$(EXECS:.ml=.native): %.native: %.ml p1.cmxa
 	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ p1.cmxa $<
 
 
