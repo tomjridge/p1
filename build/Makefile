@@ -58,7 +58,7 @@ depend:
 
 
 clean:
-	find . ! \( -name Makefile -or -name . -or -name interactive.ml -or -name old \) -exec rm -f \{\} \;
+	find . ! \( -name Makefile -or -name . -or -name old \) -exec rm -f \{\} \;
 
 realclean:
 
