@@ -4,6 +4,8 @@ CAMLC=$(shell command -v ocamlc.opt || command -v ocamlc || echo missing_ocamlc)
 CAMLOPT=$(shell command -v ocamlopt.opt || command -v ocamlopt || echo missing_ocamlopt)
 CAMLDEP=$(shell command -v ocamldep.opt || command -v ocamldep || echo missing_ocamldep) -one-line
 OCAMLDOC=$(shell command -v ocamldoc.opt || command -v ocamldoc || echo missing_ocamldoc)
+CAMLCINCLUDES=str.cma
+CAMLOPTINCLUDES=str.cmxa
 
 # FIXME probably want to look at warning 8 a bit more closely
 WARNINGS=-w -8 #-w -26-8
@@ -25,10 +27,10 @@ link:
 	find ../src \( -name "*.ml" -or -name "*.mli" \) -maxdepth 1 -exec ln -sf \{\} . \;
 
 p1.cma: $(CMO)
-	$(CAMLC) $(CAMLCINCLUDES) -a -o $@ $(CMO)
+	$(CAMLC) $(COMPFLAGS) -a -o $@ $(CMO)
 
 p1.cmxa: $(CMO:.cmo=.cmx)
-	$(CAMLOPT) -a -o $@ $(CMO:.cmo=.cmx)
+	$(CAMLOPT) $(COMPFLAGS) -a -o $@ $(CMO:.cmo=.cmx)
 
 $(NATIVES): %.native: %.ml p1.cmxa
 	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ p1.cmxa $<
@@ -44,11 +46,11 @@ $(NATIVES): %.native: %.ml p1.cmxa
 	$(CAMLC) $(CAMLCINCLUDES) $(COMPFLAGS) -c $<
 
 .ml.cmx:
-	$(CAMLOPT) $(FORPACK) $(COMPFLAGS) $(CAMLOPTINCLUDES) -c $<
+	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -c $<
 
 
-doc: p1_lib.mli
-	$(OCAMLDOC) -html p1_lib.mli
+doc: p1_lib.mli p1_parse_grammar.mli
+	$(OCAMLDOC) -html p1_lib.mli p1_parse_grammar.mli
 
 
 depend:

@@ -5,18 +5,36 @@
 open P1_lib
 
 type nonterm = string
-type sym = [ `NT of string | `TM of string ]
+type symbol = [ `NT of string | `TM of string ]
 
-type grammar = (nonterm * sym list) list
+type grammar = (nonterm * symbol list) list
+
+type grammar_with_actions = 
+  string (* header *)
+  * (nonterm * symbol list * string) list (* rule with action *)
+
+let syms_of_grammar : grammar -> symbol list = fun g0 ->
+  let syms_of_rule = (fun (nt,syms) -> (`NT nt)::syms) in
+  g0 |> List.map syms_of_rule |> List.concat
+
+let is_NT x = match x with | `NT x -> true | _ -> false
+
+let dest_NT x = match x with | `NT x -> x | _ -> failwith "dest_NT"
+
+let unique xs =
+  let f1 acc x = if List.mem x acc then acc else x::acc in
+  List.fold_left f1 [] xs
+
+let nts_of_grammar g = g |> syms_of_grammar |> List.filter is_NT |> List.map dest_NT |> unique
 
 let tm_of_lit quote lit = `TM(quote^lit^quote)
 
 let parse_comm = fun i -> ((a "(*") **> until_a "*)" **> (a "*)")) i
 
-let parse_ws = parse_RE " *" (* do we want more than one whitespace? *)
+let parse_ws = parse_RE "[ \n]*" (* do we want more than one whitespace? *)
 
 let noteps : ('a,'b) ty_parser -> ('a,'b) ty_parser = (fun p i0 ->
-    i0 |> p |> (List.filter (fun (x,ss) -> ss_len ss <> 0)))
+    i0 |> p |> (List.filter (fun (x,ss) -> ss_len ss <> (i0 |> substring_of_input |> ss_len))))
 
 let eps = parse_eps
 
@@ -28,6 +46,10 @@ let listof : ('a,'b) ty_parser -> ('a,'c) ty_parser -> ('a,'b list) ty_parser = 
         i0
     in
     f1 ||| (eps >> (fun _ -> [])))
+
+(*
+let _ = "a b c" |> mk_ss |> toinput |> ((listof (parse_RE "[abc]") (a " ")) >> List.map content)
+*)
 
 (* FIXME only one comment in ws? *)
 let parse_wscomm =
@@ -74,13 +96,16 @@ and parse_SYM = fun i ->
 let (_:(string,grammar) ty_parser) = parse_GRAMMAR
 
 (*
+let _ = "E" |> mk_ss |> toinput |> parse_SYM
+let _ = "E E E" |> mk_ss |> toinput |> parse_SYMS
+let _ = "E -> E E E | E E" |> mk_ss |> toinput |> parse_RULE
+let _ = "E -> E E E  E -> E E" |> mk_ss |> toinput |> parse_RULES
+let _ = "E -> E E E\n| \"1\"  E -> E E" |> mk_ss |> toinput |> parse_RULES
 
-let str = {abc|
-E -> E E E
-| "1" 
-| ""
-|abc}
 
+let (Some t0) = read_file_as_string "../resources/example_grammar"
+let g0 = t0 |> mk_ss |> toinput |> parse_GRAMMAR
+*)
 
 
 
@@ -128,64 +153,70 @@ and parse_CODES = fun i -> listof parse_CODE parse_wscomm i
 and parse_CODE = fun i ->
   (((a "{{") **> until_a "}}" **> (a "}}")) >> (fun (_lt,(act,_gt)) -> (content act))) i
 
-let (_:ty_input1 -> ((string * (nonterm * (symbol list * string list)) list) * substring) list)
+let (_:(string,(string * (nonterm * (symbol list * string list)) list)) ty_parser)
     = parse_GRAMMAR_WITH_ACTIONS'
 
-let drop_actions g = List.map (fun (nt,y) -> (nt,fst y)) g
+(* 
+let (Some t0) = read_file_as_string "../resources/example_grammar_with_actions"
+let g0 = t0 |> mk_ss |> toinput |> parse_GRAMMAR_WITH_ACTIONS'
+*)
 
+(* return only the first action for each alternative *)
 let parse_GRAMMAR_WITH_ACTIONS = fun i ->
   let rs = parse_GRAMMAR_WITH_ACTIONS' i in
-  let f2 (nt,(syms,acts)) = (nt,(syms,List.hd acts)) in
+  let f2 (nt,(syms,acts)) = (nt,syms,List.hd acts) in
   let f1 (h,rules) = (h,List.map f2 rules) in
   let f3 (v,srem) = (f1 v,srem) in
   List.map f3 rs
 
-let (_:ty_input1 -> ((string * (nonterm * (symbol list * string)) list) * substring) list)
+let (_:(string,grammar_with_actions) ty_parser)
     = parse_GRAMMAR_WITH_ACTIONS
 
-let get_grammar fname = (
-  let open P1_prelude in
-  let open P1_core.Common in
-  let open P1_core.Substring in
-  let rs = (parse_GRAMMAR (toinput (full (read_file_as_string fname)))) in
+let get_grammar : string -> grammar = (fun fname ->
+  let txt = read_file_as_string fname in
+  let txt = (match txt with | Some x -> x | _ -> failwith ("get_grammar: no file: "^fname)) in
+  let rs = txt |> mk_ss |> toinput |> parse_GRAMMAR in
   let _ = if List.length rs = 0 then (
-    failwith ("Failed to parse grammar file: "^fname^""))
+      failwith ("get_grammar: failed to parse grammar file: "^fname^""))
   in
-  let _ = if List.length rs > 1 then (failwith ("Ambiguous grammar file: "^fname)) in
+  let _ = if List.length rs > 1 then (failwith ("get_grammar: ambiguous grammar file: "^fname)) in
   let (g,_) = List.hd rs in
   g)
 
-let get_grammar_with_actions fname = (
-  let open P1_prelude in
-  let open P1_core.Common in
-  let open P1_core.Substring in
-  let rs = (parse_GRAMMAR_WITH_ACTIONS (toinput (full (read_file_as_string fname)))) in
+let get_grammar_with_actions : string -> grammar_with_actions = (fun fname ->
+  let txt = read_file_as_string fname in
+  let txt = (match txt with | Some x -> x | _ -> failwith ("get_grammar: no file: "^fname)) in
+  let rs = txt |> mk_ss |> toinput |> parse_GRAMMAR_WITH_ACTIONS in
   let _ = if List.length rs = 0 then (
-    failwith ("Failed to parse grammar file: "^fname^""))
+      failwith ("get_grammar: failed to parse grammar file: "^fname^""))
   in
-  let _ = if List.length rs > 1 then (failwith ("Ambiguous grammar file: "^fname)) in
+  let _ = if List.length rs > 1 then (failwith ("get_grammar: ambiguous grammar file: "^fname)) in
   let (g,_) = List.hd rs in
   g)
 
-
+let drop_actions g = g |> List.map (fun (nt,syms,act) -> (nt,syms))
 
 (* following functions are for printing a grammar with altered actions *)
-let unparse_GRAMMAR_WITH_ACTIONS (h,g) = (
-  let nts = P1_core.Common.nts_of_grammar (drop_actions g) in
-  let rhss nt = List.map snd (List.filter (fun (nt',_) -> nt' = nt) g) in
-  let rhss = List.map (fun nt -> (nt,rhss nt)) nts in
-  let f1 (nt,rhss) = (
+(*
+let unparse_GRAMMAR_WITH_ACTIONS : grammar_with_actions -> string = (fun (h,g) ->
+  let nts : nonterm list = nts_of_grammar (drop_actions g) in
+  let rhss : nonterm -> (symbol list * string) list = fun nt -> 
+    g |> (List.filter (fun (nt',_,_) -> nt' = nt)) |> List.map (fun (nt,syms,act) -> (syms,act))
+  in
+  let f1 : nonterm * (symbol list * string) list -> string = (fun (nt,xs) ->
     let string_of_symbol sym = (match sym with
       | `NT nt -> nt
       | `TM tm -> tm)
     in
-    let string_of_rhs rhs = String.concat " " (List.map string_of_symbol rhs) in
-    let f2 (rhs,s) = (string_of_rhs rhs)^" {{"^s^"}}" in
+    let string_of_syms rhs = String.concat " " (List.map string_of_symbol rhs) in
+    let f2 (syms,act) = (string_of_syms syms)^" {{"^act^"}}" in
     nt^" -> "^(String.concat "\n| " (List.map f2 rhss))^"\n")
   in
   "{{"^h^"}}\n"
-  ^(String.concat "\n" (List.map f1 rhss)))
+  ^(String.concat "\n" (nts |> List.map rhss |> List.map f1 rhss)))
+*)
 
+(*
 let pt_fun_of_rhs nt syms = (
   let rec upto a b = if a=b then [] else a::(upto (a+1) b) in
   let var n = "x"^(string_of_int n) in
@@ -205,9 +236,11 @@ let pt_fun_of_rhs nt syms = (
   let vars = List.map (fun (v,sym) -> if is_TM sym then _LF^"("^dquote^(String.escaped(dest_TM sym))^dquote^","^v^")" else v) vars in
   let list_pat = "["^(String.concat ";" vars)^"]" in
   " fun "^pat^" -> "^_NODE^"(\""^nt^"\","^list_pat^") ")
+*)
 
+(*
 let mk_pt_actions (h,g) = (
   let f1 (nt,(syms,s)) = (nt,(syms,pt_fun_of_rhs nt syms)) in
   let g = List.map f1 g in
   (h,g))
-
+*)
