@@ -3,3 +3,7 @@ all:
 
 clean:
 	cd build && make clean
+
+index.html: README.md
+	pandoc -s $< > $@
+
