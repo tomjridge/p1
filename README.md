@@ -7,7 +7,12 @@ First International Conference, CPP 2011, Kenting, Taiwan, December
 7-9, 2011. Proceedings, volume 7086 of Lecture Notes in Computer
 Science, pages 103--118. Springer, 2011
 
-The documentation is currently on the github P1 wiki.
+The documentation source is currently on the github P1 wiki. 
+
+The documentation can be viewed at <http://tomjridge.github.io/p1/p1_doc.html>
+
+The ocamldoc can be viewed at <http://tomjridge.github.io/p1/ocamldoc>
+
 
 ## TODO
 
