@@ -52,7 +52,8 @@ $(EXECS:.ml=.native): %.native: %.ml p1.cmxa
 
 
 doc: p1_lib.mli p1_parse_grammar.mli
-	$(OCAMLDOC) -html p1_lib.mli p1_parse_grammar.mli
+	-mkdir ocamldoc
+	$(OCAMLDOC) -d ocamldoc -html p1_lib.mli p1_parse_grammar.mli
 
 
 depend:
@@ -63,6 +64,7 @@ depend:
 
 clean:
 	find . ! \( -name Makefile -or -name . -or -name old \) -exec rm -f \{\} \;
+	rm -rf ocamldoc
 
 realclean:
 
