@@ -9,10 +9,10 @@ bibliography: parsing.bib
 
 # Meta
 
-This documentation is stored on github, user `tomjridge`, repository
-`p1.wiki`. It is intended to be formatted to html using pandoc, but
-should be readable under the github wiki interface. Periodically the
-html version of this document is placed in the main `p1` repository.
+This documentation is stored on github in the `doc` subdirectory of
+the `p1` repository (user `tomjridge`). It is intended to be formatted
+to html using pandoc (see `Makefile` in `doc` dir). Periodically the
+html version of this document is placed on the web.
 
   * <http://www.tom-ridge.com/parsing.html> - links to P1 documentation on the web
 
