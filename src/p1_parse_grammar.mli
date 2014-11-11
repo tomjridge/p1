@@ -13,10 +13,13 @@ type grammar_with_actions =
   string (* header *)
   * (nonterm * symbol list * string) list (* rule with action *)
 
+val nts_of_grammar : grammar -> string list
+
 val parse_GRAMMAR : (string,grammar) ty_parser
 
 val parse_GRAMMAR_WITH_ACTIONS : (string,grammar_with_actions) ty_parser
 
+val drop_actions : (nonterm * symbol list * string) list -> (nonterm * symbol list) list
 
 (** Get grammar from file; may throw exception *)
 val get_grammar: string -> grammar 
