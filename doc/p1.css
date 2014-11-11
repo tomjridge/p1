@@ -5,6 +5,7 @@
 body {
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #222;
+  max-width: 60em;
 }
 
 h1, .h1,
@@ -20,9 +21,10 @@ h6, .h6 {
 }
 
 h1 {
-    font-size: 40px;
+    font-size: 30px;
 }
 
 .title {
-    font-size: 60px;
+    font-size: 40px;
+    padding: 16 0;
 }
