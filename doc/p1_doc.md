@@ -2,7 +2,7 @@
 ---
 title: 'P1 documentation'
 author: 'Tom Ridge'
-date: 2014-10-03
+date: 2014-11-11
 bibliography: parsing.bib
 
 ---
@@ -14,7 +14,7 @@ This documentation is stored on github, user `tomjridge`, repository
 should be readable under the github wiki interface. Periodically the
 html version of this document is placed in the main `p1` repository.
 
-  * <http://tomjridge.github.io/p1/p1_doc.html> - doc formatted by pandoc
+  * <http://www.tom-ridge.com/parsing> - links to P1 documentation on the web
 
 # Introduction
 
@@ -38,7 +38,7 @@ documentation for P1. This is a useful source of information. The
 interface is defined in the `p1_lib.mli` file, and we include excerpts
 from this file in the following sections.
 
-  * <http://tomjridge.github.io/p1/ocamldoc/> - ocamldoc
+  * <http://www.tom-ridge.com/resources/p1/ocamldoc/> - ocamldoc
 
 In addition, the entire code for the core of P1 is under 40 lines. In
 conjunction with [@ridge2011simple] it should be easy to understand
