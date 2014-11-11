@@ -3,6 +3,7 @@
 (* FIXME code generation doesn't work correctly if we have a nt with no rules *)
 
 open P1_lib
+open P1_extra_combinators
 
 type nonterm = string
 type symbol = [ `NT of string | `TM of string ]
@@ -37,15 +38,6 @@ let noteps : ('a,'b) ty_parser -> ('a,'b) ty_parser = (fun p i0 ->
     i0 |> p |> (List.filter (fun (x,ss) -> ss_len ss <> (i0 |> substring_of_input |> ss_len))))
 
 let eps = parse_eps
-
-(* list of p separated by sep *)
-let listof : ('a,'b) ty_parser -> ('a,'c) ty_parser -> ('a,'b list) ty_parser = (fun p sep ->
-    let rec f1 i0 = 
-      ((p >> (fun x -> [x]))
-       ||| ((p **> sep **> f1) >> (fun (x,(_,xs)) -> x::xs))) 
-        i0
-    in
-    f1 ||| (eps >> (fun _ -> [])))
 
 (*
 let _ = "a b c" |> mk_ss |> toinput |> ((listof (parse_RE "[abc]") (a " ")) >> List.map content)

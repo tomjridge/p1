@@ -3,3 +3,9 @@
 #mod_use "p1_core.ml";;
 #mod_use "p1_parsers.ml";;
 #mod_use "p1_lib.ml";;
+#mod_use "p1_extra_combinators.ml";;
+#mod_use "p1_parse_grammar.ml";;
+#mod_use "p1_cl.ml";;
+
+
+#mod_use "p1_examples.ml";;
