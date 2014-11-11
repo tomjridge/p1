@@ -1,9 +1,12 @@
-all:
+all: 
 	cd build && make
 
-clean:
+clean: 
 	cd build && make clean
+	cd doc && make clean
 
-index.html: README.md
-	pandoc -s $< > $@
+doc: FORCE
+	cd build && make && make ocamldoc
+	cd doc && make
 
+FORCE:

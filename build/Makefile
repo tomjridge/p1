@@ -51,7 +51,7 @@ $(EXECS:.ml=.native): %.native: %.ml p1.cmxa
 	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -c $<
 
 
-doc: p1_lib.mli p1_parse_grammar.mli
+ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
 	-mkdir ocamldoc
 	$(OCAMLDOC) -d ocamldoc -html p1_lib.mli p1_parse_grammar.mli
 
@@ -68,3 +68,4 @@ clean:
 
 realclean:
 
+FORCE:
