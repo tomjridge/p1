@@ -4,9 +4,9 @@
 
 ocaml defns
 
-<<p3<<
+<<g<<
 grammar defn
->>p3>>
+>>g>>
 
 ocaml defns
 
@@ -18,7 +18,7 @@ open P1_cl
 open P1_parse_grammar
 
 let parse_file = 
-  (((until_a "<<p3<<") **> (a "<<p3<<") **> (until_a ">>p3>>") **> (a ">>p3>>") **> parse_RE ".*")
+  (((until_a "<<g<<") **> (a "<<g<<") **> (until_a ">>g>>") **> (a ">>g>>") **> parse_RE ".*")
    >> (fun (pre,(_,(mid,(_,post)))) -> (content pre,content mid,content post)))
 
 (* command line args *)
@@ -64,7 +64,7 @@ let main () =
     ((ws **> parse_GRAMMAR_WITH_ACTIONS **> ws) >> (fun (_,(g,_)) -> g)) 
   in
   let ((header,g),_) = (match rs with 
-    | [x] -> x | _ -> failwith (command^": failed to parse p3 component of grammar file: "^mid)) 
+    | [x] -> x | _ -> failwith (command^": failed to parse <<g<<...>>g>> component of grammar file: "^mid)) 
   in
   let (start_sym0,_1,_2) = (List.hd g) in
   let start_sym = `NT start_sym0 in
