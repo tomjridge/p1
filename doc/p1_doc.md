@@ -14,7 +14,7 @@ This documentation is stored on github, user `tomjridge`, repository
 should be readable under the github wiki interface. Periodically the
 html version of this document is placed in the main `p1` repository.
 
-  * <http://www.tom-ridge.com/parsing> - links to P1 documentation on the web
+  * <http://www.tom-ridge.com/parsing.html> - links to P1 documentation on the web
 
 # Introduction
 
