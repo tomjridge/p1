@@ -78,7 +78,8 @@ val parse_RE : string -> (string, string substring) ty_parser
     the regexp does not occur, consume all the input. *)
 val parse_not_RE : string -> (string, string substring) ty_parser
 
-val parse_EOF : (string, string substring) ty_parser
+val parse_EOF : ('a, 'a substring) ty_parser
+val until_EOF : ('a, 'a substring) ty_parser
 
 (** Parse an empty substring *)
 val parse_eps : ('a,'a substring) ty_parser

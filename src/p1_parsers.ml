@@ -35,12 +35,15 @@ let until_a : string -> (string,string substring) ty_parser = (
     in
     f1 0)
 
-
-let parse_EOF : (string, string substring) ty_parser = (fun i0 ->
+let parse_EOF : ('a, 'a substring) ty_parser = (fun i0 ->
     i0 |> substring_of_input |> (
       function (`SS(s,i,j)) -> 
         if i=j then [`SS(s,i,j),`SS(s,i,j)] (* FIXME note that this assumes j is the end of input *) 
         else []))
+
+let until_EOF : ('a,'a substring) ty_parser = (fun i0 ->
+    i0 |> substring_of_input |> (
+      function (`SS(s,i,j)) -> [`SS(s,i,j),`SS(s,j,j)]))
 
 let parse_eps : ('a,'a substring) ty_parser = (fun i0 ->
     i0 |> substring_of_input |> (function (`SS(s,i,j)) -> [`SS(s,i,i),`SS(s,i,j)]))
