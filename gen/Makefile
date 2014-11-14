@@ -24,4 +24,4 @@ $(EXECS:.ml=.native): %.native: %.ml
 	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ $<
 
 clean: 
-	rm -f *.{cmi,cmx,native,o}
+	rm -f *.{cmi,cmx,native,o} test.ml
