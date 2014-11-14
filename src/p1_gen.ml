@@ -27,21 +27,7 @@ let ws = (parse_RE "[ \n]*")
 let parse_embedded_grammar : (string,(nonterm * symbol list * string) list) ty_parser = 
   ws **> parse_GRAMMAR_WITH_ACTIONS **> ws >> (fun (_,(x,_)) -> snd x)
 
-(*
 
-let Some txt = read_file_as_string "../resources/example_embedded_grammar_with_acts"
-
-let [((s1,s2,s3),_)] = txt |> mk_ss |> toinput |> parse_file
-
-let [(g0,_)] = s2 |> mk_ss |> toinput |> parse_embedded_grammar 
-
-(* example code *)
-
-let rec parse_E = (fun i -> 
-  check_and_upd_lctxt "E" (
-    ((parse_E **> parse_E **> parse_E) >> (fun (x,(y,z)) -> x+y+z))
-    ||| ((a "1") >> (fun _ -> 1))
-    ||| ((a "") >> (fun _ -> 0))) i)
 
 (* so we need to map a nt E to a string parse_E *)
 let nonterm_to_parse_fun_name = fun nt -> "parse_"^nt
@@ -63,17 +49,50 @@ let rhs_to_ocaml = (fun (syms,act) ->
      ")"])
 
 let rules_for_nt_to_ocaml = (fun (nt,xs) -> 
-   "let rec "^(nonterm_to_parse_fun_name nt)^" = 
+   (* let rec *)
+   (nonterm_to_parse_fun_name nt)^" = (fun i0 -> (
+  check_and_upd_lctxt \""^nt^"\" (*vnl*)(
     "^
-   (xs |> List.map rhs_to_ocaml |> String.concat "\n    ||| "))
+   (xs |> List.map rhs_to_ocaml |> String.concat "\n    ||| ")^" )(*vnl*) i0))"
+)
 
-let xs0 = ("E",g0 |> List.filter (fun (x,_,_) -> x="E") |> List.map (fun (_,x,y) -> (x,y)))
+let rhs_for_nt nt g0 = (nt,g0 |> List.filter (fun (x,_,_) -> x=nt) |> List.map (fun (_,x,y) -> (x,y)))
+
+
+
+
+(*
+let Some txt = read_file_as_string "../resources/example_embedded_grammar_with_acts"
+
+let [((s1,s2,s3),_)] = txt |> mk_ss |> toinput |> parse_file
+
+let [(g0,_)] = s2 |> mk_ss |> toinput |> parse_embedded_grammar 
+
+let xs0 = rhs_for_nt "E" g0
 
 let _ = rules_for_nt_to_ocaml xs0 |> print_endline
-
 *)
 
+let grammar_to_ocaml = (fun g0 ->
+   let nts = g0 |> drop_actions |> nts_of_grammar in
+   String.concat "" [
+     "let rec ";
+     String.concat "\n  and " (
+       nts |> List.map (fun nt -> rhs_for_nt nt g0) |> List.map rules_for_nt_to_ocaml)])
 
+(*
+let _ = grammar_to_ocaml g0 |> print_endline
+*)
+
+let rec parse_E = (fun i0 -> (
+  check_and_upd_lctxt "E" (*vnl*)(
+    ((parse_E**>parse_E**>parse_E) >> ( fun (x,(y,z)) -> x+y+z ))
+    ||| (((a "1")) >> ( fun _ -> 1 ))
+    ||| (((a "")) >> ( fun _ -> 0 ))
+    ||| ((parse_F) >> ( fun x -> x )) )(*vnl*) i0))
+  and parse_F = (fun i0 -> (
+  check_and_upd_lctxt "F" (*vnl*)(
+    ((parse_E) >> ( fun x -> x )) )(*vnl*) i0))
 
 
 (* command line args *)
@@ -83,15 +102,11 @@ let cl0 = { grammar="";  }
 (* precedence to earlier args *)
 let rec parse_CL = fun i -> (
   let f1 cl (f,xs) = (match (f,xs) with
-    | (x,[]) -> {cl with grammar=x }
+    | ("-g",[x]) -> {cl with grammar=x }
     | _ -> (failwith ("parse_CL: unrecognized flag/arg combination: "^f^" "^(String.concat " " xs))))
   in
   let sep = a "\x00" in
   (((listof parse_FLARGS sep) **> parse_EOF) >> (fun (xs,_) -> List.fold_left f1 cl0 xs))) i
-
-let str_of_GRAMMAR g = ""
-
-let str_of_SYM sym = ""
 
 (* FIXME following should have same checks on input wellformedness as other mains *)
 let main () =
@@ -123,14 +138,15 @@ let main () =
   let (start_sym0,_1,_2) = (List.hd g) in
   let start_sym = `NT start_sym0 in
   let nts = nts_of_grammar (drop_actions g) in 
-  let s = str_of_GRAMMAR g in
+  let s = g |> grammar_to_ocaml in
   let s = s ^ "\n" in 
   let _ = print_string (
-    pre^"\n"^
-      header^"\n"^
-      s^"\n"^
-      "let parse_start = "^(str_of_SYM start_sym)^"\n"^
-      post)
+      String.concat "\n" [
+        pre;
+        header;
+        s;
+        "let parse_start = "^(nonterm_to_parse_fun_name start_sym0);
+        post])
   in
   ()
 

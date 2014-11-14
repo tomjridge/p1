@@ -26,7 +26,7 @@ let unique xs =
   let f1 acc x = if List.mem x acc then acc else x::acc in
   List.fold_left f1 [] xs
 
-let nts_of_grammar g = g |> syms_of_grammar |> List.filter is_NT |> List.map dest_NT |> unique
+let nts_of_grammar g = g |> syms_of_grammar |> List.filter is_NT |> List.map dest_NT |> unique |> List.sort Pervasives.compare
 
 let tm_of_lit quote lit = `TM(quote^lit^quote)
 
