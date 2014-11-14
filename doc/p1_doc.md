@@ -47,6 +47,12 @@ the interface, for users who do not want to grapple with the details
 of [@ridge2011simple].
 
 
+# Building and running examples
+
+  * In the `p1` top-level directory type `make` to build
+  * Then to run some examples, type `build/p1_examples.native`
+  * To run a code-generation example, change to the `gen` directory and type `make`
+
 # Substrings
 
 The API is defined in the file `p1_lib.mli`. 
