@@ -176,3 +176,10 @@ type hashkey = (local_context * (int * int))
 
 let hashkey_of_input i0 = (i0.lc1,lc_substring_of i0.sb1)
   
+(* generic memo function *)
+let memo tbl key_of_input f i = (
+  let k = key_of_input i in
+  if (Hashtbl.mem tbl k) then (Hashtbl.find tbl k) else
+    let v = f i in
+    let _ = Hashtbl.add tbl k v in
+    v)

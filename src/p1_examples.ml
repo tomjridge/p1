@@ -53,13 +53,6 @@ let _ = start_stop "example b1q" f
 (**********************************************************************)
 (* with memo *)
 
-(* generic memo function *)
-let memo tbl key_of_input f i = (
-  let k = key_of_input i in
-  if (Hashtbl.mem tbl k) then (Hashtbl.find tbl k) else
-    let v = f i in
-    let _ = Hashtbl.add tbl k v in
-    v)
 
 (* we want to create a new hashtable for each new string that we
    parse, hence unit argument *)

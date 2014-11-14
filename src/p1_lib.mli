@@ -86,3 +86,6 @@ val parse_eps : ('a,'a substring) ty_parser
 
 val read_file_as_string: string -> string option
 val write_string_to_file: string -> string -> bool
+
+(** Second argument maps inputs to keys *)
+val memo : ('k, 'v) Hashtbl.t -> ('i -> 'k) -> ('i -> 'v) -> 'i -> 'v

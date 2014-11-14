@@ -50,10 +50,13 @@ let rhs_to_ocaml = (fun (syms,act) ->
 
 let rules_for_nt_to_ocaml = (fun (nt,xs) -> 
    (* let rec *)
-   (nonterm_to_parse_fun_name nt)^" = (fun i0 -> (
+   (nonterm_to_parse_fun_name nt)^" = 
+  let tbl = Hashtbl.create 100 in
+  (fun i0 -> (
   check_and_upd_lctxt \""^nt^"\" (*vnl*)(
+    memo tbl hashkey_of_input (
     "^
-   (xs |> List.map rhs_to_ocaml |> String.concat "\n    ||| ")^" )(*vnl*) i0))"
+   (xs |> List.map rhs_to_ocaml |> String.concat "\n    ||| ")^" ))(*vnl*) i0))"
 )
 
 let rhs_for_nt nt g0 = (nt,g0 |> List.filter (fun (x,_,_) -> x=nt) |> List.map (fun (_,x,y) -> (x,y)))
@@ -145,7 +148,7 @@ let main () =
         pre;
         header;
         s;
-        "let parse_start = "^(nonterm_to_parse_fun_name start_sym0);
+(*        "let parse_start = "^(nonterm_to_parse_fun_name start_sym0); *)
         post])
   in
   ()

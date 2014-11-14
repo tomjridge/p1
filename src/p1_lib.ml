@@ -23,8 +23,7 @@ let check_and_upd_lctxt = P1_core.check_and_upd_lctxt
 
 type hashkey = P1_core.hashkey
 let hashkey_of_input = P1_core.hashkey_of_input
-
-
+let memo = P1_core.memo
 
 let a = P1_parsers.a
 let until_a = P1_parsers.until_a

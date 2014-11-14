@@ -10,6 +10,7 @@ P1_GEN=../build/p1_gen.native
 EXECS=test.ml
 
 all:
+	make clean
 	make before_all
 	make test.native
 	./test.native test.txt
