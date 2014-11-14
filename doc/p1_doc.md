@@ -119,7 +119,7 @@ let a1 : (string,int) ty_parser = (fun i0 ->
 ```
 
 The library provides some standard terminal parsers. For example, the
-above can be written as `(a "1")`, where `a` is a function that takes
+above can be written as `(a "1") >> (fun _ -> 1)`, where `a` is a function that takes
 a string and returns a parser that consumes exactly that string.
 
 
