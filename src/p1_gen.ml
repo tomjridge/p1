@@ -111,46 +111,60 @@ let rec parse_CL = fun i -> (
   let sep = a "\x00" in
   (((listof parse_FLARGS sep) **> parse_EOF) >> (fun (xs,_) -> List.fold_left f1 cl0 xs))) i
 
+type 'a or_error = OK of 'a | Error of string
+
+let ( |>> ) x f = (match x with
+    | OK x -> f x
+    | Error y -> Error y)
+
 (* FIXME following should have same checks on input wellformedness as other mains *)
 let main () =
   let command = "p1_gen" in
-  let args = get_args parse_CL Sys.argv in
-  let _ = (if (args.grammar="") then
-      (failwith (command^": require a grammar file as argument"))
-    else
-      ())
+  let r = 
+    (OK (get_args parse_CL Sys.argv))
+    |>> (fun args -> 
+        if (args.grammar="") then
+          Error (command^": require a grammar file as argument")
+        else
+          OK args)
+    |>> (fun args -> 
+        match read_file_as_string args.grammar with 
+        | Some x -> OK (x,args) 
+        | None -> Error (command^": couldn't read file: "^args.grammar))
+    |>> (fun (txt,args) ->
+        let rs = txt |> mk_ss |> toinput |> parse_file in
+        match rs with
+        | [(pre,mid,post),_] -> OK(pre,mid,post)
+        | [] -> (Error (command^": failed to parse grammar file: "^args.grammar))
+        | _ -> (Error (command^": failed to parse grammar file unambiguously: "^args.grammar)))
+    |>> (fun (pre,mid,post) -> 
+        let rs : (grammar_with_actions * string substring) list = 
+          mid |> mk_ss |> toinput |> 
+          ((ws **> parse_GRAMMAR_WITH_ACTIONS **> ws) >> (fun (_,(g,_)) -> g))
+        in
+        OK(pre,mid,rs,post))
+    |>> (fun (pre,mid,rs,post) -> 
+        match rs with 
+        | [(h,g),_] -> OK(pre,(h,g),post) 
+        | _ -> Error (command^": failed to parse <<g<<...>>g>> component of grammar file: "^mid))
+    |>> (fun (pre,(header,g),post) -> 
+        let (start_sym0,_1,_2) = (List.hd g) in
+        let start_sym = `NT start_sym0 in
+        let nts = nts_of_grammar (drop_actions g) in 
+        let s = g |> grammar_to_ocaml in
+        let s = s ^ "\n" in 
+        let _ = print_string (
+            String.concat "\n" [
+              pre;
+              header;
+              s;
+              (*        "let parse_start = "^(nonterm_to_parse_fun_name start_sym0); *)
+              post])
+        in
+        OK ())
   in
-  let txt = 
-    match read_file_as_string args.grammar with 
-    | Some x -> x 
-    | None -> failwith (command^": couldn't read file: "^args.grammar) 
-  in
-  let rs = txt |> mk_ss |> toinput |> parse_file in
-  let (pre,mid,post) = (match rs with
-    | [(pre,mid,post),_] -> (pre,mid,post)
-    | [] -> (failwith (command^": failed to parse grammar file: "^args.grammar))
-    | _ -> (failwith (command^": failed to parse grammar file unambiguously: "^args.grammar)))
-  in
-  let rs : (grammar_with_actions * string substring) list = 
-    mid |> mk_ss |> toinput |> 
-    ((ws **> parse_GRAMMAR_WITH_ACTIONS **> ws) >> (fun (_,(g,_)) -> g)) 
-  in
-  let ((header,g),_) = (match rs with 
-    | [x] -> x | _ -> failwith (command^": failed to parse <<g<<...>>g>> component of grammar file: "^mid)) 
-  in
-  let (start_sym0,_1,_2) = (List.hd g) in
-  let start_sym = `NT start_sym0 in
-  let nts = nts_of_grammar (drop_actions g) in 
-  let s = g |> grammar_to_ocaml in
-  let s = s ^ "\n" in 
-  let _ = print_string (
-      String.concat "\n" [
-        pre;
-        header;
-        s;
-(*        "let parse_start = "^(nonterm_to_parse_fun_name start_sym0); *)
-        post])
-  in
-  ()
+  match r with 
+  | Error s -> failwith s
+  | OK () -> ()
 
 let _ = main ()
