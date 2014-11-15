@@ -147,18 +147,11 @@ let main () =
       | [] -> Error (command^": failed to parse <<g<<...>>g>> component of grammar file: "^mid)
       | _ -> Error (command^": failed to parse <<g<<...>>g>> component of grammar file unambiguously: "^mid))
   |>> (fun (pre,g,post) -> 
-      let (start_sym0,_1,_2) = (List.hd g) in
-      let start_sym = `NT start_sym0 in
-      let nts = nts_of_grammar (drop_actions g) in 
-      let s = g |> grammar_to_ocaml in
-      let s = s ^ "\n" in 
-      let _ = print_string (
-          String.concat "\n" [
-            pre;
-            s;
-            (*        "let parse_start = "^(nonterm_to_parse_fun_name start_sym0); *)
-            post])
-      in
+      print_string (
+        String.concat "\n" [
+          pre;
+          g |> grammar_to_ocaml;
+          post]);
       OK ())
   |> (function
       | Error s -> failwith s
