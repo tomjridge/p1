@@ -120,7 +120,7 @@ let ( |>> ) x f = (match x with
 (* FIXME following should have same checks on input wellformedness as other mains *)
 let main () =
   let command = "p1_gen" in
-  (OK (get_args parse_CL Sys.argv))
+  (try OK (get_args parse_CL Sys.argv) with Failure s -> Error s)
   |>> (fun args -> 
       if (args.grammar="") then
         Error (command^": require a grammar file as argument")
