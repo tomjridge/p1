@@ -1,8 +1,11 @@
 (* header *)
 open P1_lib
 
+let eof = parse_EOF
+let ws = parse_RE "[ \n]*"
+
 <<g<<
-S -> E       {{ fun x -> x |> string_of_int |> print_endline }}
+S -> E ?ws? ?eof?  {{ fun (x,_) -> x |> string_of_int |> print_endline }}
 
 E -> E E E   {{ fun (x,(y,z)) -> x+y+z }}
   | "1"      {{ fun _ -> 1 }}
