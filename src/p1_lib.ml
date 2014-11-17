@@ -25,6 +25,8 @@ type hashkey = P1_core.hashkey
 let hashkey_of_input = P1_core.hashkey_of_input
 let memo = P1_core.memo
 
+let run_parser_string = P1_core.run_parser_string
+
 let a = P1_parsers.a
 let until_a = P1_parsers.until_a
 let parse_RE = P1_parsers.parse_RE

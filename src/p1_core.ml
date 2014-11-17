@@ -17,31 +17,6 @@ let len : 'a substring -> int = (
 
 type nonterm = string
 
-(*
-type term = string
-
-type symbol = [ `NT of nonterm | `TM of term ]
-
-let is_NT s = (match s with `NT _ -> true | _ -> false)
-
-let dest_NT sym = (match sym with `NT x -> x | _ -> failwith "dest_NT")
-
-let is_TM sym = (match sym with `TM _ -> true | _ -> false)
-
-let dest_TM sym = (match sym with `NT _ -> failwith "dest_TM" | `TM tm -> tm)
-
-type rhs = symbol list
-
-type parse_rule = nonterm * rhs
-
-type grammar = parse_rule list
-
-
-
-type 'a parse_tree = NODE of nonterm * 'a parse_tree list | LF of term * 'a substring
-*)
-
-
 type lc_substring = int * int (* FIXME really need an extra arg int for the string *)
 
 let lc_substring_of : 'a substring -> lc_substring =
@@ -89,27 +64,6 @@ let ( **> ) p1 p2 = (fun i ->
   i |> p1 |> List.map f |> List.concat)
 let (_:('a,'b) ty_parser -> ('a,'c) ty_parser -> ('a, 'b*'c) ty_parser) = ( **> )
 
-
-(*
-let always = fun i -> [([],i.sb1)]
-let (_:('a,'b)ty_parser) = always
-
-let never = fun i -> []
-let (_:('a,'b)ty_parser) = never
-
-
-
-let rec then_list ps = match ps with
-| [] -> always
-| p::ps -> (p **> (then_list ps))
-    >> (fun (x,xs) -> (x::xs))
-
-let then_list2 nt = fun ps -> then_list ps >> (fun xs -> NODE(nt,xs))
-
-let rec or_list ps = match ps with
-| [] -> never
-| p::ps -> (p ||| (or_list ps))
-*)
 
 let lift f i = {i with sb1=(f i.sb1) } 
 let dec_high i = lift (fun (`SS(s,i,j)) -> `SS(s,i,j-1)) i 
@@ -183,3 +137,10 @@ let memo tbl key_of_input f i = (
     let v = f i in
     let _ = Hashtbl.add tbl k v in
     v)
+
+
+(**********************************************************************)
+(* convenience *)
+
+let run_parser_string : (string,'b) ty_parser -> string -> ('b*string substring) list = fun p s -> 
+  s |> mk_ss |> toinput |> p

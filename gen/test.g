@@ -17,7 +17,7 @@ E -> E E E   {{ fun (x,(y,z)) -> x+y+z }}
 let main () = 
   let fname = Sys.argv.(1) in
   let Some txt = read_file_as_string fname in
-  let _ = txt |> mk_ss |> toinput |> parse_S in
+  let _ = run_parser_string parse_S txt in
   ()
 
 let _ = main ()
