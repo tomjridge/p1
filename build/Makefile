@@ -23,10 +23,10 @@ ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
 	-mkdir ocamldoc
 	$(OCAMLDOC) -d ocamldoc -html p1_lib.mli p1_parse_grammar.mli
 
--include Makefile.include
+include Makefile.include
 
 clean:
-	find . ! \( -name Makefile -or -name Makefile.include -or -name . -or -name old \) -exec rm -f \{\} \;
+	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa
 	rm -rf ocamldoc
 
 FORCE:
