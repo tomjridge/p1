@@ -26,7 +26,7 @@ ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
 include Makefile.include
 
 clean:
-	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa
+	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa .depend
 	rm -rf ocamldoc
 
 FORCE:
