@@ -15,8 +15,7 @@ CAMLOPTINCLUDES:=str.cmxa
 WARNINGS:=-w -8 #-w -26-8
 COMPFLAGS:=$(WARNINGS)
 
-all: 
-	make before_all
+all: before_all
 	make $(CMO) p1.cma p1.cmxa p1_examples.native p1_gen.native
 
 ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
