@@ -27,6 +27,7 @@ let term_to_ocaml = (fun x0 ->
     | false -> (
         match x0.[0],x0.[l0-1] with
         | '"','"' -> ("(a "^x0^")")
+        | '\'','\'' -> ("(a "^x0^")")
         | '?','?' -> ("("^(String.sub x0 1 (l0-2))^")")
         | _ -> (failwith "term_to_ocaml: fjc")))        
 
