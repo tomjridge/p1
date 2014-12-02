@@ -18,6 +18,8 @@ COMPFLAGS:=$(WARNINGS)
 all: before_all
 	make $(CMO) p1.cma p1.cmxa $(MLS_TO_EXEC:.ml=.native)
 
+cmo: $(CMO)
+
 ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
 	-mkdir ocamldoc
 	$(OCAMLDOC) -d ocamldoc -html p1_lib.mli p1_parse_grammar.mli
