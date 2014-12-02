@@ -19,24 +19,33 @@ open P1_parse_grammar
 open P1_gen_shared
 
 
+let rhs_symbol_to_ocaml sym = (
+   match sym with 
+  | `TM x -> (term_to_ocaml x)
+  | `NT x -> ("(!_"^x^")"))
+
+let concat syms = 
+  syms |> List.map rhs_symbol_to_ocaml 
+  |> (fun xs -> (match xs with
+      | [x] -> "(rhs "^x^")"
+      | (x::xs) -> x^" >-- "^(String.concat " >- " xs)))
+
 let rhs_to_ocaml = (fun (syms,act) ->
    String.concat "" [
      "(";
-     String.concat " >> "
-     ["(" ^ (syms |> List.map rhs_symbol_to_ocaml |> String.concat "**>") ^ ")";
-       "(" ^ act ^ ")"];
+     String.concat ""
+       ["(" ^ (syms |> concat) ^ ")";
+        " >> ";
+        "(" ^ act ^ ")"];
      ")"])
 
 let rules_for_nt_to_ocaml = (fun (nt,xs) -> 
-   (* let rec *)
-   (nonterm_to_parse_fun_name nt)^" = 
-  let tbl = Hashtbl.create 100 in
-  (fun i0 -> (
-  check_and_upd_lctxt \""^nt^"\" (*vnl*)(
-    memo tbl hashkey_of_input (
-    "^
-   (xs |> List.map rhs_to_ocaml |> String.concat "\n    ||| ")^" ))(*vnl*) i0))"
-)
+    let _nt = "_"^nt in
+String.concat ";\n" [
+_nt^" := mkntparser_lazy (!"^_nt^") (lazy(alts[
+  "^(xs |> List.map rhs_to_ocaml |> String.concat ";\n    ")^" ]))";
+"  "^_nt^" := memo_p (Hashtbl.create 100) !_E"
+])
 
 let rhs_for_nt nt g0 = (nt,g0 |> List.filter (fun (x,_,_) -> x=nt) |> List.map (fun (_,x,y) -> (x,y)))
 
@@ -56,24 +65,30 @@ let _ = rules_for_nt_to_ocaml xs0 |> print_endline
 *)
 
 let grammar_to_ocaml = (fun g0 ->
-   let nts = g0 |> drop_actions |> nts_of_grammar in
-   String.concat "" [
-     "let rec ";
-     String.concat "\n  and " (
-       nts |> List.map (fun nt -> rhs_for_nt nt g0) |> List.map rules_for_nt_to_ocaml)])
+    let nts = g0 |> drop_actions |> nts_of_grammar in
+    String.concat "" [
+nts |> List.map (fun nt -> "let _"^nt^" = ref (mk_pre_parser()) in") |> String.concat "\n";
+"\n";
+"let _ = \n  ";
+nts |> List.map (fun nt -> rhs_for_nt nt g0) |> List.map rules_for_nt_to_ocaml |> String.concat ";\n  "; "\n";
+"in\n"
+])
+
 
 (*
 let _ = grammar_to_ocaml g0 |> print_endline
 
-let rec parse_E = (fun i0 -> (
-  check_and_upd_lctxt "E" (*vnl*)(
-    ((parse_E**>parse_E**>parse_E) >> ( fun (x,(y,z)) -> x+y+z ))
-    ||| (((a "1")) >> ( fun _ -> 1 ))
-    ||| (((a "")) >> ( fun _ -> 0 ))
-    ||| ((parse_F) >> ( fun x -> x )) )(*vnl*) i0))
-  and parse_F = (fun i0 -> (
-  check_and_upd_lctxt "F" (*vnl*)(
-    ((parse_E) >> ( fun x -> x )) )(*vnl*) i0))
+let rec parse_E = (
+  let _E = ref (mk_pre_parser()) in
+  let _ = _E := mkntparser_lazy (!_E) (lazy(alts[
+  ((parse_E**>parse_E**>parse_E) >> ( fun (x,(y,z)) -> x+y+z ));
+    (((a "1")) >> ( fun _ -> 1 ));
+    (((a "")) >> ( fun _ -> 0 ));
+    ((parse_F) >> ( fun x -> x )) ])) )
+  and parse_F = (
+  let _F = ref (mk_pre_parser()) in
+  let _ = _F := mkntparser_lazy (!_F) (lazy(alts[
+  ((parse_E) >> ( fun x -> x )) ])) )
 
 *)
 
@@ -98,7 +113,7 @@ let ( |>> ) x f = (match x with
 
 (* FIXME following should have same checks on input wellformedness as other mains *)
 let main () =
-  let command = "p1_gen" in
+  let command = "p1_gen_p4" in
   (try OK (get_args parse_CL Sys.argv) with Failure s -> Error s)
   |>> (fun args -> 
       if (args.grammar="") then

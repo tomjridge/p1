@@ -6,6 +6,7 @@
 #mod_use "p1_extra_combinators.ml";;
 #mod_use "p1_parse_grammar.ml";;
 #mod_use "p1_cl.ml";;
+#mod_use "p1_gen_shared.ml";;
 
 
 #mod_use "p1_examples.ml";;
