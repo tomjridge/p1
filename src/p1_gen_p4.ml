@@ -44,7 +44,7 @@ let rules_for_nt_to_ocaml = (fun (nt,xs) ->
 String.concat ";\n" [
 _nt^" := mkntparser_lazy (!"^_nt^") (lazy(alts[
   "^(xs |> List.map rhs_to_ocaml |> String.concat ";\n    ")^" ]))";
-"  "^_nt^" := memo_p (Hashtbl.create 100) !_E"
+"  "^_nt^" := memo_p (Hashtbl.create 100) !"^_nt
 ])
 
 let rhs_for_nt nt g0 = (nt,g0 |> List.filter (fun (x,_,_) -> x=nt) |> List.map (fun (_,x,y) -> (x,y)))
