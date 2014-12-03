@@ -12,7 +12,7 @@ CAMLCINCLUDES:=str.cma
 CAMLOPTINCLUDES:=str.cmxa
 
 # FIXME probably want to look at warning 8 a bit more closely
-WARNINGS:=-w -8 #-w -26-8
+WARNINGS:=-w -8 -w -23 #-w -26-8
 COMPFLAGS:=$(WARNINGS)
 
 all: before_all
