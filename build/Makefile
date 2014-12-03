@@ -4,7 +4,7 @@ MLS_TO_EXEC:=p1_examples.ml p1_gen.ml p1_gen_p4.ml # executables
 IGNORE_FOR_LIB:=$(MLS_TO_EXEC) interactive.ml # don't want these in the lib
 MLS_FOR_LIB_1:=$(shell ocamlfind ocamldep -sort *.ml)
 MLS_FOR_LIB:=$(filter-out $(IGNORE_FOR_LIB), $(MLS_FOR_LIB_1)) # p1_examples.ml is an executable
-CMO:=$(MLS_FOR_LIB:.ml=.cmo) $(warning CMO evaluated)
+CMO:=$(MLS_FOR_LIB:.ml=.cmo)
 
 LIB:=p1
 
