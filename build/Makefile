@@ -1,34 +1,66 @@
+SHELL:=bash
 
-SRC_DIR:=../src
-MLS_TO_EXEC:=p1_examples.ml p1_gen.ml p1_gen_p4.ml # executables
-IGNORE_FOR_LIB:=$(MLS_TO_EXEC) interactive.ml # don't want these in the lib
-MLS_FOR_LIB_1:=$(shell ocamlfind ocamldep -sort *.ml)
-MLS_FOR_LIB:=$(filter-out $(IGNORE_FOR_LIB), $(MLS_FOR_LIB_1)) # p1_examples.ml is an executable
-CMO:=$(MLS_FOR_LIB:.ml=.cmo)
+CAMLC:=ocamlfind ocamlc
+CAMLOPT:=ocamlfind ocamlopt
 
-LIB:=p1
+CAMLDEP:=ocamlfind ocamldep -one-line
+OREBUILD:=./orebuild
+OCAMLDOC:=ocamlfind ocamldoc
 
 CAMLCINCLUDES:=str.cma
 CAMLOPTINCLUDES:=str.cmxa
 
-# FIXME probably want to look at warning 8 a bit more closely
-WARNINGS:=-w -8 -w -23 #-w -26-8
-COMPFLAGS:=$(WARNINGS)
+COMPFLAGS?=# maybe set some additional compilation options
+
+MLS:=$(shell ocamlfind ocamldep -sort *.ml *.mli)
+SRC_DIR:=../src
+
+MLS_TO_EXEC:=p1_examples.ml p1_gen.ml p1_gen_p4.ml # executables
+IGNORE_FOR_LIB:=$(MLS_TO_EXEC) interactive.ml # don't want these in the lib
+MLS_FOR_LIB_1:=$(shell ocamlfind ocamldep -sort *.ml)
+MLS_FOR_LIB:=$(filter-out $(IGNORE_FOR_LIB), $(MLS_FOR_LIB_1)) # p1_examples.ml is an executable
+LIB:=p1
+CMO:=$(MLS_FOR_LIB:.ml=.cmo)
+
 
 all: before_all
-	make cmo p1.cma p1.cmxa $(MLS_TO_EXEC:.ml=.native)
+	$(MAKE) cmo
+	$(MAKE) cmx
+	$(MAKE) $(LIB).cma $(LIB).cmxa $(MLS_TO_EXEC:.ml=.native)
 
-cmo: $(CMO)
+.depend:
+	$(CAMLDEP) *.mli *.ml >.depend
 
-ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
-	-mkdir ocamldoc
-	$(OCAMLDOC) -d ocamldoc -html p1_lib.mli p1_parse_grammar.mli
+# this compiles all .ml and .mli files not just $(CMO)
+cmo: $(MLS)
+#	echo The following command will be run: $(CAMLC) $(CAMLCINCLUDES) $(COMPFLAGS) -c `$(OREBUILD) .depend $?`
+	$(CAMLC) $(CAMLCINCLUDES) $(COMPFLAGS) -c `$(OREBUILD) .depend $?`
+	touch cmo
 
-include Makefile.include
+
+
+cmx: $(MLS) 
+	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -c `$(OREBUILD) .depend $?`
+	touch cmx
+
+
+$(LIB).cma: $(MLS_FOR_LIB:.ml=.cmo)
+	$(CAMLC) $(COMPFLAGS) -a -o $@ $(CMO)
+
+$(LIB).cmxa: $(MLS_FOR_LIB:.ml=.cmx)
+	$(CAMLOPT) $(COMPFLAGS) -a -o $@ $(CMO:.cmo=.cmx)
+
+$(MLS_TO_EXEC:.ml=.native): %.native: %.ml $(LIB).cmxa
+	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ $(LIB).cmxa $<
+
+
+before_all: link .depend
+
+link: $(SRC_DIR)
+	find $(SRC_DIR) -maxdepth 1 -type f -exec ln -sf \{\} . \;
+
 
 clean:
-	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa .depend
-	rm -rf ocamldoc
-
-FORCE:
+	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa .depend cmo cmx
+	rm -rf ocamldoc orebuild.exe pending.ml.todo
 
