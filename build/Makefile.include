@@ -29,10 +29,10 @@ cmx: $(MLS)
 	touch cmx
 
 
-$(LIB).cma: $(MLS_FOR_LIB:.ml=.cmo)
+$(LIB).cma: cmo
 	$(CAMLC) $(COMPFLAGS) -a -o $@ $(MLS_FOR_LIB:.ml=.cmo)
 
-$(LIB).cmxa: $(MLS_FOR_LIB:.ml=.cmx)
+$(LIB).cmxa: cmx
 	$(CAMLOPT) $(COMPFLAGS) -a -o $@ $(MLS_FOR_LIB:.ml=.cmx)
 
 $(MLS_TO_EXEC:.ml=.native): %.native: %.ml $(LIB).cmxa
