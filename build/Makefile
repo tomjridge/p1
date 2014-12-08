@@ -19,7 +19,11 @@ all: before_all
 
 include Makefile.include
 
+ocamldoc: p1_lib.mli p1_parse_grammar.mli FORCE
+	-mkdir ocamldoc
+	$(OCAMLDOC) -d ocamldoc -html p1_lib.mli p1_parse_grammar.mli
 
 clean: before_clean
 	rm -f pending.ml.todo
 
+FORCE:
