@@ -39,5 +39,5 @@ $(MLS_TO_EXEC:.ml=.native): %.native: %.ml $(LIB).cmxa
 	$(CAMLOPT) $(COMPFLAGS) $(CAMLOPTINCLUDES) -o $@ $(LIB).cmxa $<
 
 before_clean:
-	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa .depend cmo cmx orebuild.exe
+	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa *.cmt *.cmti .depend cmo cmx orebuild.exe
 	rm -rf ocamldoc 
