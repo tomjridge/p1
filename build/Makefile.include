@@ -10,7 +10,7 @@ COMPFLAGS?=# maybe set some additional compilation options
 
 before_all: link .depend
 
-link: $(SRC_DIR)
+link: FORCE
 	find $(SRC_DIR) -maxdepth 1 -type f -exec ln -sf \{\} . \;
 
 .depend: link
@@ -41,3 +41,5 @@ $(MLS_TO_EXEC:.ml=.native): %.native: %.ml $(LIB).cmxa
 before_clean:
 	rm -f *.ml *.mli *.cmo *.cmi *.cmx *.native *.a *.o *.cma *.cmxa *.cmt *.cmti .depend cmo cmx orebuild.exe
 	rm -rf ocamldoc 
+
+FORCE:
