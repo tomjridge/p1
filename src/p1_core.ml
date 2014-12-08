@@ -13,6 +13,18 @@ let content : string substring -> string =
 let len : 'a substring -> int = (
   fun (`SS(s,i,j)) -> (j-i))
 
+(* convenience *)
+let ss_concat_2 : 'a substring -> 'a substring -> 'a substring = fun (`SS(s,i,k)) (`SS(s',k',j)) ->
+  assert(k'=k && s'=s);
+  `SS(s,i,j)
+
+(* assumes the substrings are adjacent; inefficient *)
+let rec ss_concat xs = (match xs with
+    | [] -> (failwith "ss_concat")
+      | [x] -> x
+    | x::xs -> (ss_concat_2 x (ss_concat xs)))
+
+
 
 
 type nonterm = string

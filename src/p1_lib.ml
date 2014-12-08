@@ -5,6 +5,8 @@ let content = P1_core.content
 
 let ss_len = P1_core.len
 
+let ss_concat = P1_core.ss_concat
+
 type nonterm = string
 
 type 'a ty_input = 'a P1_core.ty_input
