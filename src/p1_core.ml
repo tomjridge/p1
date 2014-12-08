@@ -18,11 +18,12 @@ let ss_concat_2 : 'a substring -> 'a substring -> 'a substring = fun (`SS(s,i,k)
   assert(k'=k && s'=s);
   `SS(s,i,j)
 
-(* assumes the substrings are adjacent; inefficient *)
+(* assumes the substrings are adjacent *)
 let rec ss_concat xs = (match xs with
-    | [] -> (failwith "ss_concat")
-      | [x] -> x
-    | x::xs -> (ss_concat_2 x (ss_concat xs)))
+    | [] -> None 
+    | [x] -> (Some x)
+    | [x;y] -> (Some(ss_concat_2 x y))
+    | x::xs -> (Some(ss_concat_2 x (List.hd (List.rev xs)))))
 
 
 

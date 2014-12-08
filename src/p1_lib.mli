@@ -17,8 +17,8 @@ val content : string substring -> string
 
 val ss_len : 'a substring -> int
 
-(** Concatenate a list of adjacent substrings; assumes list not empty *)
-val ss_concat : 'a substring list -> 'a substring
+(** Concatenate a list of adjacent substrings; assumes 'string components are equal and substrings are adjacent; returns none iff empty list *)
+val ss_concat : 'a substring list -> 'a substring option
 
 (*
 val dest_substring : 'a substring -> string * int * int
