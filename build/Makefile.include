@@ -13,7 +13,7 @@ before_all: link .depend
 link: $(SRC_DIR)
 	find $(SRC_DIR) -maxdepth 1 -type f -exec ln -sf \{\} . \;
 
-.depend:
+.depend: link
 	$(CAMLDEP) *.mli *.ml >.depend
 
 
