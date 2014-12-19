@@ -7,6 +7,8 @@ let mk_ss : string -> string substring = fun s -> `SS(s,0,String.length s)
 let dest_substring : 'a substring -> string * int * int = 
   fun (`SS(s,i,j)) -> (s,i,j)
 
+let ss_to_string = fun (`SS(s,i,j)) -> Printf.sprintf "(%s,%d,%d)" s i j
+
 let content : string substring -> string = 
   fun (`SS(s,l,h)) -> String.sub s l (h-l)
 
@@ -18,12 +20,16 @@ let ss_concat_2 : 'a substring -> 'a substring -> 'a substring = fun (`SS(s,i,k)
   assert(k'=k && s'=s);
   `SS(s,i,j)
 
+
+
 (* assumes the substrings are adjacent *)
 let rec ss_concat xs = (match xs with
     | [] -> None 
     | [x] -> (Some x)
     | [x;y] -> (Some(ss_concat_2 x y))
-    | x::xs -> (Some(ss_concat_2 x (List.hd (List.rev xs)))))
+    | x::xs -> (match ss_concat xs with
+        | None -> None
+        | Some xs -> Some(ss_concat_2 x xs)))
 
 
 

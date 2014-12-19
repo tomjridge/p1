@@ -1,5 +1,8 @@
 SHELL:=bash
 
+CAMLC:=ocamlfind ocamlc
+CAMLOPT:=ocamlfind ocamlopt
+
 CAMLCINCLUDES:=str.cma
 CAMLOPTINCLUDES:=str.cmxa
 COMPFLAGS:=-w -8 -w -23 -bin-annot
