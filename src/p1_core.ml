@@ -161,5 +161,6 @@ let memo tbl key_of_input f i = (
 (**********************************************************************)
 (* convenience *)
 
-let run_parser_string : (string,'b) ty_parser -> string -> ('b*string substring) list = fun p s -> 
-  s |> mk_ss |> toinput |> p
+(* return those results for which entire input is parsed *)
+let run_parser_string : (string,'b) ty_parser -> string -> 'b list = fun p s -> 
+  s |> mk_ss |> toinput |> p |> List.filter (fun (_,`SS(s,i,j)) -> i=j) |> List.map fst

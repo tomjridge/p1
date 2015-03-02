@@ -64,8 +64,8 @@ val ignr_last : ('a,'b) ty_parser -> ('a,'b) ty_parser)
     left-recursion must pass through check_and_upd_lctxt *)
 val check_and_upd_lctxt : nonterm -> ('a,'b) ty_parser -> ('a,'b) ty_parser
 
-(** Convenience function *)
-val run_parser_string : (string,'b) ty_parser -> string -> ('b*string substring) list
+(** Convenience function, return results for which whole of the input was consumed *)
+val run_parser_string : (string,'b) ty_parser -> string -> 'b list
 
 
 type hashkey
