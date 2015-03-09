@@ -1,13 +1,13 @@
 all: 
-	cd build && make
+	cd build && $(MAKE)
 
 clean: 
-	cd build && make clean
-	cd doc && make clean
-	cd gen && make clean
+	cd build && $(MAKE) clean
+	cd doc && $(MAKE) clean
+	cd gen && $(MAKE) clean
 
 doc: FORCE
-	cd build && make && make ocamldoc
-	cd doc && make
+	cd build && $(MAKE) && $(MAKE) ocamldoc
+	cd doc && $(MAKE)
 
 FORCE:
