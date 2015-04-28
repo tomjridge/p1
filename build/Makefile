@@ -1,7 +1,7 @@
 SHELL:=bash
 
-CAMLCINCLUDES:=str.cma
-CAMLOPTINCLUDES:=str.cmxa
+CAMLCINCLUDES:=-package str
+CAMLOPTINCLUDES:=-package str
 COMPFLAGS:=-w -8 -w -23 -bin-annot
 
 MLS:=$(filter-out interactive.ml, $(shell ocamlfind ocamldep -sort *.ml *.mli))
