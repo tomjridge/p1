@@ -48,9 +48,7 @@ let until_EOF : ('a,'a substring) ty_parser = (fun i0 ->
 let parse_eps : ('a,'a substring) ty_parser = (fun i0 ->
     i0 |> substring_of_input |> (function (`SS(s,i,j)) -> [`SS(s,i,i),`SS(s,i,j)]))
 
-
-let parse_RE : string -> (string, string substring) ty_parser = (fun re -> 
-  let re = Str.regexp re in
+let parse_regexp: Str.regexp -> (string, string substring) ty_parser = (fun re -> 
   let f2 = fun (`SS(s,i,j)) -> (
     let b = Str.string_match re s i in
     if b then
@@ -64,14 +62,18 @@ let parse_RE : string -> (string, string substring) ty_parser = (fun re ->
   in
   fun i0 -> i0 |> substring_of_input |> f2)
 
+let parse_RE : string -> (string, string substring) ty_parser = (fun re -> 
+  let re = Str.regexp re in
+  parse_regexp re)
+
+
 (*
 let _ = "abc" |> mk_ss |> toinput |> (parse_RE "a")
 let _ = "abc" |> mk_ss |> toinput |> (parse_RE "b")
 let _ = assert ("aabc" |> mk_ss |> toinput |> (parse_RE "a*") = [(`SS("aabc",0,2), `SS ("aabc", 2, 4))])
 *)
 
-let parse_not_RE : string -> (string, string substring) ty_parser = (fun re -> 
-  let re = Str.regexp re in
+let parse_not_regexp : Str.regexp -> (string, string substring) ty_parser = (fun re -> 
   let f2 = fun (`SS(s,i,j)) -> (
     try
       let k = Str.search_forward re s i in
@@ -79,6 +81,11 @@ let parse_not_RE : string -> (string, string substring) ty_parser = (fun re ->
     with Not_found -> [`SS(s,i,j),`SS(s,j,j)])  (* read till end of string *)
   in
   fun i0 -> i0 |> substring_of_input |> f2)
+
+
+let parse_not_RE : string -> (string, string substring) ty_parser = (fun re -> 
+  let re = Str.regexp re in
+  parse_not_regexp re)
 
 (*
 let _ = "abc" |> mk_ss |> toinput |> (parse_not_RE "b")

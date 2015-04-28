@@ -80,10 +80,12 @@ val until_a : string -> (string, string substring) ty_parser
 (** Take a regexp (following Str) and parse that regexp at beginning
     of input *)
 val parse_RE : string -> (string, string substring) ty_parser
+val parse_regexp: Str.regexp -> (string, string substring) ty_parser
 
 (** Take a regexp, and parse until that regexp occurs in the input. If
     the regexp does not occur, consume all the input. *)
 val parse_not_RE : string -> (string, string substring) ty_parser
+val parse_not_regexp: Str.regexp -> (string, string substring) ty_parser
 
 val parse_EOF : ('a, 'a substring) ty_parser
 val until_EOF : ('a, 'a substring) ty_parser
