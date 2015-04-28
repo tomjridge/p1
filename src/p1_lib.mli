@@ -74,7 +74,10 @@ val hashkey_of_input: 'a ty_input -> hashkey
 
 
 
+(** Parse a literal *)
 val a : string -> (string, string substring) ty_parser
+
+(** Parse chars until a literal, or the end of the string *)
 val until_a : string -> (string, string substring) ty_parser
 
 (** Take a regexp (following Str) and parse that regexp at beginning
