@@ -18,7 +18,5 @@ in stdenv.mkDerivation {
     
       configurePhase = "true"; 	# Skip configure
   
-      installPhase = "true";
-    
       createFindlibDestdir = true;
     }

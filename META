@@ -1,0 +1,6 @@
+name="p1"
+description="P1 parsing library"
+version="0.1.0"
+depends=""
+archive(byte)="p1.cma"
+archive(native)="p1.cmxa"
