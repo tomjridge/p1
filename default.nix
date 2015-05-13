@@ -1,3 +1,4 @@
+{ }:
 let 
     pkgs = import <nixpkgs> {};
     stdenv = pkgs.stdenv;
