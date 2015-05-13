@@ -19,4 +19,9 @@ in stdenv.mkDerivation {
       configurePhase = "true"; 	# Skip configure
   
       createFindlibDestdir = true;
+
+      postInstall=''
+        cp -R build gen $out
+        mkdir -p $out/bin && cp build/*.native $out/bin
+      '';
     }
