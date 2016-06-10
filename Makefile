@@ -16,6 +16,6 @@ clean:
 	cd build && $(MAKE) clean
 	cd doc && $(MAKE) clean
 	cd gen && $(MAKE) clean
-
+	-rm result
 
 FORCE:
