@@ -9,7 +9,7 @@ export BASH_ENV
 include depend.mk
 
 all: symlink FORCE
-	$(MAKE) $(core_xs) $(extra_xs) $(lib_xs) $(examples_xs)
+	$(MAKE) $(naive_xs) $(core_xs) $(extra_xs) $(lib_xs) $(examples_xs)
 	echo "make all: finished"
 
 symlink: 

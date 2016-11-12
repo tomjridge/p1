@@ -5,7 +5,7 @@ root=$(realpath $(dirname $BASH_SOURCE))/..
 
 DISABLE_NATIVE="echo"
 
-PKGS="-package str"
+PKGS="-package str,astring"
 SYNTAX=""
 
 # 8~"pattern-matching is not exhaustive"; 
