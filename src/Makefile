@@ -39,7 +39,8 @@ clean:
 	rm -f *.cmi *.cmo *.cmx *.o *.x
 
 real_clean: clean
-	rm -f symlink *.ml *.mli 
+	rm -f symlink
+	for f in */*.ml */*.mli; do rm -f `basename $$f`; done
 
 FORCE:
 
