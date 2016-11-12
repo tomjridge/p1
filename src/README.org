@@ -1,6 +1,7 @@
 * Directory dependencies
 
 
+#BEGIN_SRC
 
    examples          gen  
        |               |
@@ -14,6 +15,7 @@
                |
                v
              core
+#END_SRC
 
 
 * File list
