@@ -1,3 +1,5 @@
+
+
 type 'a substring = 'a P1_core.substring
 let mk_ss = P1_core.mk_ss
 
@@ -29,16 +31,44 @@ let memo = P1_core.memo
 
 let run_parser_string = P1_core.run_parser_string
 
-let a = P1_parsers.a
-let until_a = P1_parsers.until_a
-let parse_RE = P1_parsers.parse_RE
-let parse_regexp = P1_parsers.parse_regexp
-let parse_not_RE = P1_parsers.parse_not_RE
-let parse_not_regexp = P1_parsers.parse_not_regexp
-let parse_EOF = P1_parsers.parse_EOF
-let until_EOF = P1_parsers.until_EOF
-let parse_eps  = P1_parsers.parse_eps
 
-let read_file_as_string = P1_util.read_file_as_string
-let write_string_to_file = P1_util.write_string_to_file
 
+let a = P1_extra.a
+let until_a = P1_extra.until_a
+let parse_RE = P1_extra.parse_RE
+let parse_regexp = P1_extra.parse_regexp
+let parse_not_RE = P1_extra.parse_not_RE
+let parse_not_regexp = P1_extra.parse_not_regexp
+let parse_EOF = P1_extra.parse_EOF
+let until_EOF = P1_extra.until_EOF
+let parse_eps  = P1_extra.parse_eps
+
+
+(* some simple code to read and write a file, using minimal technology *)
+
+(* copied from ocaml/utils/misc.ml *)
+
+let string_of_file ic =
+  let b = Buffer.create 0x10000 in
+  let buff = Bytes.create 0x1000 in
+  let rec copy () =
+    let n = input ic buff 0 0x1000 in
+    if n = 0 then Buffer.contents b else
+      (Buffer.add_subbytes b buff 0 n; copy())
+  in copy()
+
+let read_file_as_string :string -> string option = (fun fn -> 
+  try
+    let ic = open_in fn in
+    let s = string_of_file ic in
+    let _ = close_in ic in
+    Some s
+  with _ -> None)
+
+let write_string_to_file : string -> string -> bool = (fun s fn ->
+  try
+    let oc = open_out fn in
+    let _ = output_string oc s in
+    let _ = close_out oc in
+    true
+  with _ -> false)

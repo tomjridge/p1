@@ -1,32 +1,42 @@
 * Directory dependencies
 
-examples: extra
-extra: core
-lib: extra
-misc: core
-util: extra
+
+
+   examples          gen  
+       |               |
+       |               |
+       '----->lib<-----'
+               |
+               |
+               v
+             extra
+               |
+               |
+               v
+             core
+
 
 * File list
 
-| ./core/p1_core.ml               |                                          |
-| ./core/p1_prelude.ml            | debugging, sets, maps, lib funs          |
-|                                 |                                          |
-| ./examples/p1_examples.ml       |                                          |
-|                                 |                                          |
-| ./extra/p1_extra_combinators.ml | FIXME remove; remove p1_lib dependency   |
-| ./extra/p1_extra.ml             |                                          |
-| ./extra/p1_parsers.ml           | standard parsers; FIXME move to p1_extra |
-|                                 |                                          |
-| ./lib/p1_lib.ml                 |                                          |
-| ./lib/p1_lib.mli                | packaging into a single module           |
-|                                 |                                          |
-| ./misc/interactive.ml           | for loading mods one-by-one in top-level |
-|                                 |                                          |
-| ./util/p1_cl.ml                 |                                          |
-| ./util/p1_gen.ml                |                                          |
-| ./util/p1_gen_p4.ml             |                                          |
-| ./util/p1_gen_shared.ml         |                                          |
-| ./util/p1_parse_grammar.ml      |                                          |
-| ./util/p1_parse_grammar.mli     |                                          |
-| ./util/p1_util.ml               | read/write file FIXME move to p1_prelude |
-|                                 |                                          |
+| ./core/p1_core.ml          |                                          |
+| ./core/p1_prelude.ml       | debugging, sets, maps, lib funs          |
+|                            |                                          |
+| ./extra/p1_extra.ml        | combinators etc.                         |
+|                            |                                          |
+| ./lib/p1_lib.ml            |                                          |
+| ./lib/p1_lib.mli           | packaging into a single module           |
+|                            |                                          |
+
+Examples:
+
+| ./examples/p1_examples.ml | 
+
+
+Extra files for parser generation:
+
+| ./gen/p1_cl.ml             |  
+| ./gen/p1_gen.ml            |  
+| ./gen/p1_gen_p4.ml         |  
+| ./gen/p1_gen_shared.ml     |  
+| ./gen/p1_parse_grammar.ml  |  
+| ./gen/p1_parse_grammar.mli |  

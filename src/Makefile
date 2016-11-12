@@ -8,8 +8,8 @@ export BASH_ENV
 
 include depend.mk
 
-all: symlink 
-	$(MAKE) $(core_x) $(extra_x)
+all: symlink FORCE
+	$(MAKE) $(core_xs) $(extra_xs) $(lib_xs) $(examples_xs)
 	echo "make all: finished"
 
 symlink: 
@@ -42,7 +42,7 @@ real_clean: clean
 	rm -f symlink *.ml *.mli 
 
 FORCE:
-	true
+
 
 # CAMLCINCLUDES:=-package str
 # CAMLOPTINCLUDES:=-package str

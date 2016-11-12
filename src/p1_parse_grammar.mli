@@ -1,1 +1,1 @@
-util/p1_parse_grammar.mli
+gen/p1_parse_grammar.mli

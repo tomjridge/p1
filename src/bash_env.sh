@@ -3,6 +3,8 @@ set -a # export all vars
 
 root=$(realpath $(dirname $BASH_SOURCE))/..
 
+DISABLE_NATIVE="echo"
+
 PKGS="-package str"
 SYNTAX=""
 
@@ -19,6 +21,6 @@ mk_cma="$DISABLE_BYTE ocamlfind ocamlc"
 mk_cmxa="$DISABLE_NTVE ocamlfind ocamlopt"
 
 
-function assert_in_build() {
-    if [ "${PWD##*/}" = "_build" ]; then return 0; else echo "error: not in _build"; return -1; fi
-}
+# function assert_in_build() {
+#     if [ "${PWD##*/}" = "_build" ]; then return 0; else echo "error: not in _build"; return -1; fi
+# }
