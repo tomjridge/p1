@@ -1,1 +1,14 @@
 resources
+/src/p0_test.ml
+/src/p1_cl.ml
+/src/p1_core.ml
+/src/p1_examples.ml
+/src/p1_extra.ml
+/src/p1_gen.ml
+/src/p1_gen_p4.ml
+/src/p1_gen_shared.ml
+/src/p1_lib.ml
+/src/p1_lib.mli
+/src/p1_parse_grammar.ml
+/src/p1_parse_grammar.mli
+/src/p1_prelude.ml
