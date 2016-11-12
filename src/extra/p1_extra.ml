@@ -1,18 +1,7 @@
+(** Extra definitions that are occasionally useful but shouldn't be in core *)
+
 open P1_core
 
-(** Parse a literal *)
-let a : string -> (string,string substring) ty_parser = (
-  fun lit i0 -> 
-    let (`SS(s,i,j)) = substring_of_input i0 in
-    let len = j-i in
-    let n = String.length lit in
-    if
-      (n <= len)
-      && (String.sub s i n = lit)
-    then
-      [(`SS(s,i,i+n),`SS(s,i+n,j))]
-    else
-      [])
 
 (** Parse chars until a literal, or the end of the string *)
 let until_a : string -> (string,string substring) ty_parser = (
@@ -94,3 +83,38 @@ let _ = assert ("aabc" |> mk_ss |> toinput |> (parse_not_RE "b+") =
   [(`SS ("aabc", 0, 2), `SS ("aabc", 2, 4))])
 *)
 
+
+
+let ss_to_string = function (`SS(s,i,j)) -> (
+    String.concat "" [
+      "(";
+      string_of_int i;
+      ",";
+      string_of_int j;
+      ")" ])
+
+
+(* list of p separated by sep *)
+let listof : ('a,'b) ty_parser -> ('a,'c) ty_parser -> ('a,'b list) ty_parser = (fun p sep ->
+    let rec f1 i0 = 
+      ((p >> (fun x -> [x]))
+       ||| ((p **> sep **> f1) >> (fun (x,(_,xs)) -> x::xs))) 
+        i0
+    in
+    f1 ||| (parse_eps >> (fun _ -> [])))
+
+
+
+(** Parse a literal *)
+let a : string -> (string,string substring) ty_parser = (
+  fun lit i0 -> 
+    let (`SS(s,i,j)) = substring_of_input i0 in
+    let len = j-i in
+    let n = String.length lit in
+    if
+      (n <= len)
+      && (String.sub s i n = lit)
+    then
+      [(`SS(s,i,i+n),`SS(s,i+n,j))]
+    else
+      [])
