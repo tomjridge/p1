@@ -1,0 +1,22 @@
+* P1 parsing library
+
+Currently undergoing reconstruction...
+
+
+* Build with ocaml
+
+#+begin_src
+make
+make install # for ocamlfind install
+#+end_src
+
+* Build with nix
+
+#+begin_src
+nix-build
+#+end_src
+
+After this, there is a directory ~./result~, which you can install
+with ~nix-env -i ./result~, or just inspect it.
+
+
