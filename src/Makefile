@@ -12,6 +12,8 @@ all: symlink FORCE
 	$(MAKE) $(naive_xs) $(core_xs) $(extra_xs) $(lib_xs) $(examples_xs)
 	echo "make all: finished"
 
+test: $(test_xs)
+
 symlink: 
 	ln -s */*.ml */*.mli .
 	touch $@
