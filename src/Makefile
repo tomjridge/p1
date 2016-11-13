@@ -9,7 +9,7 @@ export BASH_ENV
 include depend.mk
 
 all: symlink FORCE
-	$(MAKE) $(naive_xs) $(core_xs) $(extra_xs) $(lib_xs) $(examples_xs)
+	$(MAKE) $(naive_xs) $(core_xs) $(extra_xs) $(lib_xs) $(examples_xs) p1.cma p1.cmxa
 	echo "make all: finished"
 
 test: $(test_xs)
@@ -31,10 +31,10 @@ symlink:
 	$$ocamlopt -c $*.ml
 	touch $@
 
-p1_lib.cma: $(xs)
+p1.cma: $(xs)
 	$$mk_cma -g -a -o $@ $(xs:.x=.cmo)
 
-p1_lib.cmxa: $(xs)
+p1.cmxa: $(xs)
 	$$mk_cmxa -g -a -o $@ $(xs:.x=.cmx)
 
 clean: 

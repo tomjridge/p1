@@ -3,8 +3,6 @@ set -a # export all vars
 
 root=$(realpath $(dirname $BASH_SOURCE))/..
 
-DISABLE_NATIVE="echo"
-
 PKGS="-package str,astring"
 SYNTAX=""
 

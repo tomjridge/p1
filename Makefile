@@ -1,12 +1,9 @@
-all: 
+all: FORCE
 	$(MAKE) -C src
 
-#	cd build && $(MAKE)
-#	cd gen && $(MAKE)
+install: all
+	ocamlfind install p1 META src/*.cmi  src/p1.cma src/p1.cmxa src/p1.a
 
-
-# install: all
-# 	ocamlfind install p1 META build/*.cmi  build/p1.cma build/p1.cmxa build/p1.a
 # 
 # install-bin:
 # 	echo FIXME # executables need to go somewhere
@@ -16,10 +13,6 @@ all:
 # 	cd doc && $(MAKE)
 
 clean: 
-	rm -rf _build
-# 	cd build && $(MAKE) clean
-# 	cd doc && $(MAKE) clean
-# 	cd gen && $(MAKE) clean
-
+	$(MAKE) -C src clean
 
 FORCE:
