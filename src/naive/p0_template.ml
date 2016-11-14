@@ -39,15 +39,16 @@ module T = struct
     | [t] -> t >> (fun x -> L [x])
     | t::ts -> (t **> (of_l ts)) >> (function (r,L rs) -> L(r::rs)))
   
-  let rec of_strings : string list -> string subst parser_t = Subst.(fun xs ->
+  let rec of_strings : string list -> string subst parser_t = (fun xs ->
+      let module S = Subst in
       let prime s = s^"'" in
       match xs with
         [] -> (failwith "")
       | [s] -> (
-          (until_a s **> (a s)) >> (fun (x,y) -> (empty |> add s x)))
+          (until_a s **> (a s)) >> (fun (x,y) -> (S.empty |> S.add s x)))
       | s1::s2::xs -> (
           (a s1 **> until_a s2 **> of_strings (s2::xs)) >> (
-            fun (x,(y,m1)) -> (m1 |> add s1 y)))
+            fun (x,(y,m1)) -> (m1 |> S.add s1 y)))
     )
 
 end
