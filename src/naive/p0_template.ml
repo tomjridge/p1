@@ -29,7 +29,7 @@ type templater_t = res P0.parser_t
 module T = struct
   
   open P0
-  open P
+  open Substring
 
   let of_s : string -> templater_t = (fun s -> a s >> (fun x -> S x))
 
@@ -45,9 +45,9 @@ module T = struct
       match xs with
         [] -> (failwith "")
       | [s] -> (
-          (until_a s **> (a s)) >> (fun (x,y) -> (S.empty |> S.add s x)))
+          (to_a s **> (a s)) >> (fun (x,y) -> (S.empty |> S.add s x)))
       | s1::s2::xs -> (
-          (a s1 **> until_a s2 **> of_strings (s2::xs)) >> (
+          (a s1 **> to_a s2 **> of_strings (s2::xs)) >> (
             fun (x,(y,m1)) -> (m1 |> S.add s1 y)))
     )
 

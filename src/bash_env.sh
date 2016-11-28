@@ -18,6 +18,7 @@ ocamldep="ocamlfind ocamldep $PKGS"
 mk_cma="$DISABLE_BYTE ocamlfind ocamlc"
 mk_cmxa="$DISABLE_NTVE ocamlfind ocamlopt"
 
+ob="ocamlbuild $PKGS -Is core,examples,extra,lib,naive"
 
 # function assert_in_build() {
 #     if [ "${PWD##*/}" = "_build" ]; then return 0; else echo "error: not in _build"; return -1; fi

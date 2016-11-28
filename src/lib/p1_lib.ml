@@ -1,48 +1,28 @@
 
 
-type 'a substring = 'a P1_core.substring
-let mk_ss = P1_core.mk_ss
-
-let content = P1_core.content
-
-let ss_len = P1_core.len
-
-let ss_concat = P1_core.ss_concat
+type 'a substring = 'a P1_core.Substring.t
 
 type nonterm = string
 
-type 'a ty_input = 'a P1_core.ty_input
+type 'a input = 'a P1_core.input_t
 
-let toinput = P1_core.toinput
-let substring_of_input = P1_core.substring_of_input
+type ('a,'b) result = ('a,'b) P1_core.result
 
-type ('a,'b) ty_parser = ('a,'b) P1_core.ty_parser
+type ('a,'b) parser_t = ('a,'b) P1_core.parser_t
 
 let ( >> ) = P1_core.( >> )
 let ( ||| ) = P1_core.( ||| )
 let ( **> ) = P1_core.( **> )
 
-let check_and_upd_lctxt = P1_core.check_and_upd_lctxt
+let check = P1_core.Context.check
 
-
-type hashkey = P1_core.hashkey
-let hashkey_of_input = P1_core.hashkey_of_input
-let memo = P1_core.memo
 
 let run_parser_string = P1_core.run_parser_string
 
-
-
-let a = P1_extra.a
-let until_a = P1_extra.until_a
-let parse_RE = P1_extra.parse_RE
-let parse_regexp = P1_extra.parse_regexp
-let parse_not_RE = P1_extra.parse_not_RE
-let parse_not_regexp = P1_extra.parse_not_regexp
-let parse_EOF = P1_extra.parse_EOF
-let until_EOF = P1_extra.until_EOF
-let parse_eps  = P1_extra.parse_eps
-
+module Basic_parsers = struct
+  type p = (string, string) P1_core.parser_t
+  (* FIXME include P1_extra.Basic_parsers *)
+end
 
 (* some simple code to read and write a file, using minimal technology *)
 
@@ -72,3 +52,8 @@ let write_string_to_file : string -> string -> bool = (fun s fn ->
     let _ = close_out oc in
     true
   with _ -> false)
+
+let memo = P1_core.memo
+
+type hashkey = P1_core.hashkey
+let hashkey_of_input = P1_core.hashkey_of_input
