@@ -44,6 +44,39 @@ end) = struct
     let (s,l,i,j) = s in
     j-i)
 
+
+  (* alternative implementation with objects; extremely slow for some
+     reason *)
+
+(*
+  type 'a t = < s: 'a; i:int; j:int; len: int; with_i: int -> 'a t; with_j: int -> 'a t >
+
+  let mk s0 = 
+    object (self)
+      val i0 = 0
+      val j0 = String.length s0
+      val l0 = String.length s0
+      method s = s0
+      method i = i0
+      method j = j0
+      method len = l0
+      method with_i i = {< i0=i; l0=j0-i >}
+      method with_j j = {< j0=j; l0=j-i0 >}
+    end
+
+  let with_i i' s = s#with_i i'
+
+  let with_j j' s = s#with_j j'
+
+  let s s = s#s
+
+  let i s = s#i
+
+  let j s = s#j
+
+  let len s = (s#len)
+*)
+
 end
 
 module S = Substring

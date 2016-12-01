@@ -18,8 +18,24 @@ ocamldep="ocamlfind ocamldep $PKGS"
 mk_cma="$DISABLE_BYTE ocamlfind ocamlc"
 mk_cmxa="$DISABLE_NTVE ocamlfind ocamlopt"
 
-ob="ocamlbuild $PKGS -Is core,examples,extra,lib,naive"
+
+natives="
+p0_test.native
+p1_examples.native
+"
+
+
+# ----------------------------------------
+
+# ob="ocamlbuild $PKGS -Is core,examples,extra,lib,naive"
+
+# mk_lib="ocamlbuild -Is core,examples,extra,lib,naive p1_lib.cma p1_lib.cmxa"
 
 # function assert_in_build() {
 #     if [ "${PWD##*/}" = "_build" ]; then return 0; else echo "error: not in _build"; return -1; fi
+# }
+
+
+# function init() {
+#     find $1 -name "*.ml" -o -name "*.mli" -exec ln -s \{\} . \;
 # }

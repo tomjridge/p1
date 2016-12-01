@@ -1,6 +1,7 @@
 open P1_core
 open P1_core.Context
-open P1_extra
+
+type 'a parser_t = (string,'a) P1_core.parser_t
 
 (* for testing *)
 let a1 s = (

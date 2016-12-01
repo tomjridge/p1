@@ -1,13 +1,9 @@
 S naive
 S core
-S examples
-S extra
 S lib
-S misc
-S util
+S examples
 
 B .
 
-PKG astring
 
 FLG -w @f@p@u@s@40-8-11-26
