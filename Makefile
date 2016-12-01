@@ -1,14 +1,11 @@
-all: FORCE
+all:
 	$(MAKE) -C src
 
 install: all
 	ocamlfind install p1 META `find src -name "*.cmi" -o -name "*.cma" -o -name "*.cmxa" -o -name "*.a"`
 
-uninstall: FORCE
+uninstall: 
 	ocamlfind remove p1
 
 clean: 
-	$(MAKE) -C src clean
-
-FORCE:
-
+	$(MAKE) -C src clean real_clean
