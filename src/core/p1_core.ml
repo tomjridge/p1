@@ -156,6 +156,8 @@ let (_:('a,'b) parser_t -> ('a,'b) parser_t) = ignr_last
 (* context ---------------------------------------- *)
 
 module Context = struct
+  
+  (* FIXME combine with Pre_context *)
 
   include Pre_context
 

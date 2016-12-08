@@ -105,6 +105,7 @@ let longest : 'a parser_t -> 'a parser_t = (fun p ->
 
 (* running the parse ---------------------------------------- *)
 
+(* FIXME rename run_parse_string? and return only those matching whole stirng? *)
 let parse_string : 'a parser_t -> string -> 'a m = (fun p s -> s|>mk|>p)
 
 (* return 'a such that the whole input was parsed *)
